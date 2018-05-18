@@ -29,26 +29,27 @@ namespace TsuroTheSecondTests
         //    //}
         //}
         [TestMethod]
-        public void TestParserGetName(){
+        public void TestParserGetCommand(){
             XElement get_name = XElement.Parse("<get-name> </get-name>");
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(get_name.ToString());
             Parser parser = new Parser();
-            (string command, object output) = parser.FromXML(xmlDocument);
+            string command = parser.GetCommand(xmlDocument);
             Assert.AreEqual("get-name", command);
-            Assert.IsNull(output);
+
         }
-        //[TestMethod]
-        //public void TestParserInitialize()
-        //{
-        //    XElement get_name = XElement.Parse("<get-name> </get-name>");
-        //    XmlDocument xmlDocument = new XmlDocument();
-        //    xmlDocument.LoadXml(get_name.ToString());
-        //    Parser parser = new Parser();
-        //    (string command, object output) = parser.FromXML(xmlDocument);
-        //    Assert.AreEqual("get-name", command);
-        //    Assert.IsNull(output);
-        //}
+
+        [TestMethod]
+        public void TestParserInitialize()
+        {
+            XElement get_name = XElement.Parse("<initialize> <color> blue </color> <list> <color> red </color> <color> blue </color> <color> green </color> </list> </initialize>");
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(get_name.ToString());
+            Parser parser = new Parser();
+            (string own_color, List<string> other_colors) = parser.InitializeXML(xmlDocument);
+            Assert.AreEqual("blue", own_color);
+            CollectionAssert.AreEqual(new List<string>{"red", "blue", "green"}, other_colors);
+        }
 
     }
 }
