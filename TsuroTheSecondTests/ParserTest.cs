@@ -117,7 +117,7 @@ namespace TsuroTheSecondTests
             doc.LoadXml(xmlContent);
             XmlNode newNode = doc.DocumentElement;
             Parser parser = new Parser();
-            //IN PROGRESS
+            // IN PROGRESS
             //
         }
     }
