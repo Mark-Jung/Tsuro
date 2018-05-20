@@ -96,29 +96,58 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
-        public void TestParserPawnLoc()
+        public void TestParserPawnLocHorizontal()
         {
             string xmlContent = "<pawn-loc><h></h><n>3</n><n>4</n></pawn-loc>";
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xmlContent);
             XmlNode newNode = doc.DocumentElement;
             Parser parser = new Parser();
-            (string horv, int x, int y) = parser.PawnLocXML(newNode);
-            Assert.AreEqual("h", horv);
-            Assert.AreEqual(3, x);
-            Assert.AreEqual(4, y);
+            (Position result, Position result1) = parser.PawnLocXML(newNode);
+            Assert.AreEqual(new Position(2, 2, 5, false), result);
+            Assert.AreEqual(new Position(2, 3, 0, false), result1);
+
+        }
+        [TestMethod]
+        public void TestParserPawnLocVert()
+        {
+            string xmlContent = "<pawn-loc><v></v><n>2</n><n>3</n></pawn-loc>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlContent);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            (Position result, Position result1) = parser.PawnLocXML(newNode);
+            Assert.AreEqual(new Position(1, 1, 2, false), result);
+            Assert.AreEqual(new Position(2, 1, 7, false), result1);
+
         }
 
         [TestMethod]
         public void TestParserPawns()
         {
+            /*
+             * Each pawn location refers to a place on the edge of a tile and each has three components.
+             * The first component indicates if the location is on a horizontal or a vertical edge. 
+             * The second component indicates which edge it is, counting from 0 to 6. 
+             * 0 means the upper or leftmost edge of the board and 6 means either the lower or rightmost edge.
+             * If the pawn location is a horizontal location, a 1 means that it pawn location is on the bottom edge of the first row of tiles,
+             * which is also the top edge of the second row tiles. 
+             * Similarly, 1 in a vertical pawn location means either the right edge of the leftmost column of tiles, 
+             * which is also the left edge of the second leftmost row of tiles. The last component refers to the spot along the tile. 
+             * Each tile has two places a pawn might be, so those values range from 0 to 11.
+             */
             string xmlContent = "<map><ent><color>blue</color><pawn-loc><h></h><n>3</n><n>4</n></pawn-loc></ent> <ent><color>red</color><pawn-loc><v></v><n>4</n><n>3</n></pawn-loc></ent></map>";
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xmlContent);
             XmlNode newNode = doc.DocumentElement;
             Parser parser = new Parser();
             // IN PROGRESS
-            //
+            // will return a dictionary of color : Position
+            Dictionary<string, (Position, Position)> result = parser.PawnsXML(newNode);
+            Assert.AreEqual(new Position(2, 2, 5, false), result["blue"].Item1);
+            Assert.AreEqual(new Position(2, 3, 0, false), result["blue"].Item2);
+
+            Assert.AreEqual(new Position())
         }
     }
 }
