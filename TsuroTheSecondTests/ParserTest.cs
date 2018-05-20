@@ -208,7 +208,10 @@ namespace TsuroTheSecondTests
             Parser parser = new Parser();
             // 3, 4, (0, 1, 2, 3 ,4 ,5 , 6, 7)
             Dictionary<(int, int), Tile> result = parser.TilesXML(newNode);
-
+            Tile ans_tile = new Tile(1, new List<int>{ 0, 1, 2, 3, 4, 5, 6, 7 });
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(1, result[(3, 4)].id);
+            Assert.IsTrue(ans_tile.CompareByPath(result[(3, 4)]));
         }
         [TestMethod]
         public void TestParserTilesMulti()

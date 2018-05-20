@@ -130,7 +130,15 @@ namespace TsuroTheSecond
         }
 
         public Dictionary<(int, int), Tile> TilesXML(XmlNode tiles){
-            
+            Dictionary<(int, int), Tile> result = new Dictionary<(int, int), Tile>();
+            XmlNodeList entry_list = tiles.ChildNodes;
+            foreach(XmlNode entry in entry_list){
+                XmlNodeList XY_Tile = entry.ChildNodes;
+                (int x, int y) = this.XYXML(XY_Tile.Item(0));
+                Tile tile = this.TileXML(XY_Tile.Item(1));
+                result.Add((x, y), tile);
+            }
+            return result;
         }
 
     }
