@@ -97,13 +97,40 @@ namespace TsuroTheSecond
 
         public List<int> ConnectXML(XmlNode connect)
         {
-            XmlNodeList n_list = connect.SelectNodes("//n");
+            XmlNodeList n_list = connect.ChildNodes;
             List<int> result = new List<int>();
             foreach (XmlNode n in n_list)
             {
                 result.Add(this.NXML(n)); 
             }
             return result;
+        }
+
+        public Tile TileXML(XmlNode tile){
+            XmlNodeList connect_list = tile.ChildNodes;
+            List<int> path = new List<int>();
+            foreach(XmlNode connect in connect_list){
+                path.AddRange(this.ConnectXML(connect)); 
+            }
+            Tile result = new Tile(-1, path);
+            foreach(Tile each in Constants.tiles){
+                if(each.CompareByPath(result)){
+                    result.id = each.id;
+                }
+            }
+            return result;
+        }
+
+        public (int, int) XYXML(XmlNode xy){
+            int x, y;
+            XmlNodeList XandY = xy.ChildNodes;
+            x = this.NXML(XandY.Item(0).FirstChild);
+            y = this.NXML(XandY.Item(1).FirstChild);
+            return (x, y);
+        }
+
+        public Dictionary<(int, int), Tile> TilesXML(XmlNode tiles){
+            
         }
 
     }

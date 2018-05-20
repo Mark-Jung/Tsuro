@@ -150,7 +150,8 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(new Position(4, 1, 6, false), result["red"].Item2);
         }
         [TestMethod]
-        public void TestParserConnect(){
+        public void TestParserConnect()
+        {
             string xmlContent = "<connect><n>0</n><n>1</n></connect>";
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xmlContent);
@@ -158,7 +159,67 @@ namespace TsuroTheSecondTests
             Parser parser = new Parser();
             // will return two integers.(ports that will be connected)
             List<int> result = parser.ConnectXML(newNode);
-            CollectionAssert.AreEqual(new List<int>{0, 1}, result);
+            CollectionAssert.AreEqual(new List<int> { 0, 1 }, result);
+        }
+        [TestMethod]
+        public void TestParserTile()
+        {
+            string xmlContent = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlContent);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            // will return a tile with the paths and the id.
+            Tile tile = parser.TileXML(newNode);
+            Tile answer_tile = new Tile(0, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Assert.IsTrue(answer_tile.CompareByPath(tile));
+        }
+        [TestMethod]
+        public void TestParserBadTile()
+        {
+            string xmlContent = "<tile><connect><n>0</n><n>6</n></connect><connect><n>1</n><n>7</n></connect><connect><n>2</n><n>5</n></connect><connect><n>3</n><n>4</n></connect></tile>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlContent);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            // will return a tile with the paths and the id.
+            // if the tile with that path doesn't exit, the id should be -1
+            Tile tile = parser.TileXML(newNode);
+            Assert.AreEqual(-1, tile.id);
+        }
+        [TestMethod]
+        public void TestParserXY(){
+            string xmlContent = "<xy><x><n>3</n></x><y><n>4</n></y></xy>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlContent);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            // need to return two integers: x and y(3, 4)
+            (int x, int y) = parser.XYXML(newNode);
+            Assert.AreEqual(3, x);
+            Assert.AreEqual(4, y);
+        }
+        [TestMethod]
+        public void TestParserTilesOne(){
+            string xmlContent = "<map><ent><xy><x><n>3</n></x><y><n>4</n></y></xy><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile></ent></map>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlContent);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            // 3, 4, (0, 1, 2, 3 ,4 ,5 , 6, 7)
+            Dictionary<(int, int), Tile> result = parser.TilesXML(newNode);
+
+        }
+        [TestMethod]
+        public void TestParserTilesMulti()
+        {
+            string xmlContent = "<map><ent><xy><x><n>3</n></x><y><n>4</n></y></xy><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile></ent><ent><xy><x><n>4</n></x><y><n>4</n></y></xy><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile></ent></map>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlContent);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            // 3, 4 (0, 1, 2, 3, 4, 5, 6, 7), id 1
+            // 4, 4 (0, 4, 1, 5, 2, 6, 3, 7), id 9
         }
     }
 }

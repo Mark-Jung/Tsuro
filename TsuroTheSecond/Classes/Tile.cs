@@ -5,7 +5,7 @@ namespace TsuroTheSecond
 {
     public class Tile : ITile
     {
-        public readonly int id;
+        public int id;
         public List<List<int>> paths;
         public int symmetricity;
 
@@ -42,14 +42,6 @@ namespace TsuroTheSecond
             this.symmetricity = tile.symmetricity;
         }
 
-        public Tile(int _id, List<List<int>> path) {
-            this.paths = path;
-            this.id = _id;
-        }
-
-        public Tile Copy() {
-            return new Tile(this.id, this.paths);
-        }
 
         public void Rotate() {
             foreach(List<int> item in this.paths){
