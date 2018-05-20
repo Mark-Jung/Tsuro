@@ -95,5 +95,16 @@ namespace TsuroTheSecond
             return result;
         }
 
+        public List<int> ConnectXML(XmlNode connect)
+        {
+            XmlNodeList n_list = connect.SelectNodes("//n");
+            List<int> result = new List<int>();
+            foreach (XmlNode n in n_list)
+            {
+                result.Add(this.NXML(n)); 
+            }
+            return result;
+        }
+
     }
 }

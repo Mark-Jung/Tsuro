@@ -151,13 +151,14 @@ namespace TsuroTheSecondTests
         }
         [TestMethod]
         public void TestParserConnect(){
-            string xmlContent = "<connect><n>0</n><n></n></connect>";
+            string xmlContent = "<connect><n>0</n><n>1</n></connect>";
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xmlContent);
             XmlNode newNode = doc.DocumentElement;
             Parser parser = new Parser();
-
-
+            // will return two integers.(ports that will be connected)
+            List<int> result = parser.ConnectXML(newNode);
+            CollectionAssert.AreEqual(new List<int>{0, 1}, result);
         }
     }
 }
