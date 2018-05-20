@@ -114,7 +114,7 @@ namespace TsuroTheSecond
             }
             Tile result = new Tile(-1, path);
             foreach(Tile each in Constants.tiles){
-                if(each.CompareByPath(result)){
+                if(!each.IsDifferent(result)){
                     result.id = each.id;
                     break;
                 }
@@ -147,6 +147,34 @@ namespace TsuroTheSecond
             Dictionary<(int, int), Tile> TilesTobePlaced = this.TilesXML(board.FirstChild);
             Dictionary<string, (Position, Position)> TokenPositions = this.PawnsXML(board.LastChild);
             return (TilesTobePlaced, TokenPositions);
+        }
+
+        public (Dictionary<(int, int), Tile>, Dictionary<string, (Position, Position)>) PlacePawnXML(XmlNode place_pawn)
+        {
+            XmlNode board = place_pawn.FirstChild;
+            Dictionary<(int, int), Tile> TilesTobePlaced = this.TilesXML(board.FirstChild);
+            Dictionary<string, (Position, Position)> TokenPositions = this.PawnsXML(board.LastChild);
+            return (TilesTobePlaced, TokenPositions);
+        }
+
+        public HashSet<Tile> SetofTilesXML(XmlNode SetofTiles){
+            HashSet<Tile> result = new HashSet<Tile>();
+            Boolean same = false;
+            XmlNodeList tilesXML = SetofTiles.SelectNodes("/set/tile");
+
+            foreach( XmlNode tileXML in tilesXML){
+                Tile newTile = this.TileXML(tileXML);
+                foreach(Tile each in result){
+                    if(!each.IsDifferent(newTile)){
+                        same = true;
+                        break;
+                    }
+                }
+                if(!same){
+                    result.Add(newTile);
+                }
+            }
+            return result;
         }
 
     }

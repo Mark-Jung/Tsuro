@@ -123,6 +123,7 @@ namespace TsuroTheSecondTests
             Assert.IsTrue(testTile2.CompareByPath(testTile1));
 
         }
+
         [TestMethod]
         public void TestCompareByPath_f()
         {
@@ -130,6 +131,13 @@ namespace TsuroTheSecondTests
             Tile testTile2 = new Tile(2, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
             Assert.IsFalse(testTile1.CompareByPath(testTile2));
             Assert.IsFalse(testTile2.CompareByPath(testTile1));
+        }
+        [TestMethod]
+        public void TestIsDifferent()
+        {
+            Tile testTile1 = new Tile(1, new List<int> { 0, 4, 1, 5, 2, 7, 3, 6 });
+            Tile testTile2 = new Tile(2, new List<int> { 2, 6, 3, 7, 4, 1, 5, 0 });
+            Assert.IsFalse(testTile1.IsDifferent(testTile2));
         }
     }
 }

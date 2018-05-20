@@ -53,13 +53,6 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
-        public void TestParserPlacePawn()
-        {
-            // place-pawn contains a board so it should output a board object.
-
-        }
-
-        [TestMethod]
         public void TestParserN()
         {
             string xmlContent = "<n>5</n>";
@@ -260,8 +253,85 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(new Position(2, 3, 0, false), tokenPosition["blue"].Item2);
             Assert.AreEqual(new Position(3, 1, 3, false), tokenPosition["red"].Item1);
             Assert.AreEqual(new Position(4, 1, 6, false), tokenPosition["red"].Item2);
+        }
+        [TestMethod]
+        public void TestParserPlacePawn()
+        {
+            string xmlContent = "<place-pawn><board>";
+            string Tiles = "<map><ent><xy><x><n>3</n></x><y><n>4</n></y></xy><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile></ent><ent><xy><x><n>4</n></x><y><n>4</n></y></xy><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile></ent></map>";
+            string Pawns = "<map><ent><color>blue</color><pawn-loc><h></h><n>3</n><n>4</n></pawn-loc></ent> <ent><color>red</color><pawn-loc><v></v><n>4</n><n>3</n></pawn-loc></ent></map>";
+            xmlContent += Tiles;
+            xmlContent += Pawns;
+            xmlContent += "</board></place-pawn>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlContent);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            // returns tiles to be placed on the board : Dictionary key of position(int x, int y) and value of tiles
+            // returns tokens position: Dictionary key of color(string) and value of (Position, Position)
+            (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> tokenPosition) = parser.PlacePawnXML(newNode);
+            Tile ans_tile = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Tile ans_tile2 = new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 });
+            Assert.AreEqual(2, TilesTobePlaced.Count);
+            Assert.AreEqual(1, TilesTobePlaced[(3, 4)].id);
+            Assert.AreEqual(9, TilesTobePlaced[(4, 4)].id);
+            Assert.IsTrue(ans_tile.CompareByPath(TilesTobePlaced[(3, 4)]));
+            Assert.IsTrue(ans_tile2.CompareByPath(TilesTobePlaced[(4, 4)]));
+            Assert.AreEqual(2, tokenPosition.Count);
+            Assert.AreEqual(new Position(2, 2, 5, false), tokenPosition["blue"].Item1);
+            Assert.AreEqual(new Position(2, 3, 0, false), tokenPosition["blue"].Item2);
+            Assert.AreEqual(new Position(3, 1, 3, false), tokenPosition["red"].Item1);
+            Assert.AreEqual(new Position(4, 1, 6, false), tokenPosition["red"].Item2);
+        }
+        [TestMethod]
+        public void TestParserSetofTile(){
+            string tiles = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
+            string setoftile = "<set>" + tiles + "</set>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(setoftile);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            HashSet<Tile> result = parser.SetofTilesXML(newNode);
+            Assert.AreEqual(2, result.Count);
 
+        }
+        [TestMethod]
+        public void TestParserSetofTilesDupli()
+        {
+            string tiles = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
+            string setoftile = "<set>" + tiles + "</set>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(setoftile);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            HashSet<Tile> result = parser.SetofTilesXML(newNode);
+            Assert.AreEqual(2, result.Count);
 
+        }
+
+        [TestMethod]
+        public void TestParserPlayTurn(){
+            string playturn = "<play-turn>";
+            // board
+            string board = "<board>";
+            string Tiles = "<map><ent><xy><x><n>3</n></x><y><n>4</n></y></xy><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile></ent><ent><xy><x><n>4</n></x><y><n>4</n></y></xy><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile></ent></map>";
+            string Pawns = "<map><ent><color>blue</color><pawn-loc><h></h><n>3</n><n>4</n></pawn-loc></ent> <ent><color>red</color><pawn-loc><v></v><n>4</n><n>3</n></pawn-loc></ent></map>";
+            board += Tiles;
+            board += Pawns;
+            board += "</board>";
+            playturn += board;
+            // set of tile
+            string tiles = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
+            string setoftile = "<set>" + tiles + "</set>";
+            playturn += setoftile;
+            // n
+            string n = "<n>34</n>";
+            playturn += n;
+            playturn += "</play-turn>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(setoftile);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
         }
     }
 }

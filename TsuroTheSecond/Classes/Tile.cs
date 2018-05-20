@@ -39,6 +39,7 @@ namespace TsuroTheSecond
                 new List<int>{tile.paths[2][0], tile.paths[2][1]},
                 new List<int>{tile.paths[3][0], tile.paths[3][1]},
             };
+            //this.paths = tile.paths.ToList();
             this.symmetricity = tile.symmetricity;
         }
 
@@ -112,6 +113,25 @@ namespace TsuroTheSecond
 
         public Boolean CompareByPath(Tile comparison){
             return this.PathMap() == comparison.PathMap();
+        }
+
+        public Boolean IsDifferent(Tile comparison){
+            // returns true or false by comparing the tiles. Doesn't rely on how it looks
+            Tile Copyofthis = new Tile(this);
+            List<Tile> PossibleofThis = new List<Tile>();
+            for (int i = 0; i < 4; i++) {
+                Tile LoopCopy = new Tile(Copyofthis);
+                PossibleofThis.Add(LoopCopy);
+                Copyofthis.Rotate();
+            }
+
+            foreach (Tile version in PossibleofThis)
+            {
+                if (version.CompareByPath(comparison)) {
+                    return false;
+                }
+            }
+            return true;
         }
 
     }
