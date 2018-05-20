@@ -116,6 +116,7 @@ namespace TsuroTheSecond
             foreach(Tile each in Constants.tiles){
                 if(each.CompareByPath(result)){
                     result.id = each.id;
+                    break;
                 }
             }
             return result;

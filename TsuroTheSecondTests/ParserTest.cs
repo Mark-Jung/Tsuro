@@ -177,7 +177,7 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestParserBadTile()
         {
-            string xmlContent = "<tile><connect><n>0</n><n>6</n></connect><connect><n>1</n><n>7</n></connect><connect><n>2</n><n>5</n></connect><connect><n>3</n><n>4</n></connect></tile>";
+            string xmlContent = "<tile><connect><n>0</n><n>7</n></connect><connect><n>1</n><n>2</n></connect><connect><n>4</n><n>6</n></connect><connect><n>5</n><n>3</n></connect></tile>";
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xmlContent);
             XmlNode newNode = doc.DocumentElement;
@@ -223,6 +223,14 @@ namespace TsuroTheSecondTests
             Parser parser = new Parser();
             // 3, 4 (0, 1, 2, 3, 4, 5, 6, 7), id 1
             // 4, 4 (0, 4, 1, 5, 2, 6, 3, 7), id 9
+            Dictionary<(int, int), Tile> result = parser.TilesXML(newNode);
+            Tile ans_tile = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Tile ans_tile2 = new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 });
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(1, result[(3, 4)].id);
+            Assert.AreEqual(9, result[(4, 4)].id);
+            Assert.IsTrue(ans_tile.CompareByPath(result[(3, 4)]));
+            Assert.IsTrue(ans_tile2.CompareByPath(result[(4, 4)]));
         }
     }
 }
