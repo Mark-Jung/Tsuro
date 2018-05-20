@@ -76,8 +76,8 @@ namespace TsuroTheSecond
                 common_y = inp_1 / 2;
                 x_left = inp_0 - 1;
                 x_right = inp_0;
-                p_left = 3 - inp_1 % 2;
-                p_right = 6 + inp_1 % 2;
+                p_left = 2 + inp_1 % 2;
+                p_right = 7 - inp_1 % 2;
                 return (new Position(x_left, common_y, p_left, false), new Position(x_right, common_y, p_right, false));
             }
         }

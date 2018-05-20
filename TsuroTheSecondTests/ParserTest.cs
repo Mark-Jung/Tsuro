@@ -117,8 +117,8 @@ namespace TsuroTheSecondTests
             XmlNode newNode = doc.DocumentElement;
             Parser parser = new Parser();
             (Position result, Position result1) = parser.PawnLocXML(newNode);
-            Assert.AreEqual(new Position(1, 1, 2, false), result);
-            Assert.AreEqual(new Position(2, 1, 7, false), result1);
+            Assert.AreEqual(new Position(1, 1, 3, false), result);
+            Assert.AreEqual(new Position(2, 1, 6, false), result1);
 
         }
 
@@ -141,13 +141,23 @@ namespace TsuroTheSecondTests
             doc.LoadXml(xmlContent);
             XmlNode newNode = doc.DocumentElement;
             Parser parser = new Parser();
-            // IN PROGRESS
             // will return a dictionary of color : Position
             Dictionary<string, (Position, Position)> result = parser.PawnsXML(newNode);
+            Assert.AreEqual(2, result.Count);
             Assert.AreEqual(new Position(2, 2, 5, false), result["blue"].Item1);
             Assert.AreEqual(new Position(2, 3, 0, false), result["blue"].Item2);
+            Assert.AreEqual(new Position(3, 1, 3, false), result["red"].Item1);
+            Assert.AreEqual(new Position(4, 1, 6, false), result["red"].Item2);
+        }
+        [TestMethod]
+        public void TestParserConnect(){
+            string xmlContent = "<connect><n>0</n><n></n></connect>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlContent);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
 
-            Assert.AreEqual(new Position())
+
         }
     }
 }
