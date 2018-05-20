@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Xml;
 using TsuroTheSecond;
+using System.Linq;
 
 
 namespace TsuroTheSecondTests
@@ -285,19 +286,41 @@ namespace TsuroTheSecondTests
         }
         [TestMethod]
         public void TestParserSetofTile(){
+            // (0, 1, 2, 3, 4, 5, 6, 7), id 1
+            // (0, 4, 1, 5, 2, 6, 3, 7), id 9
             string tiles = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
             string setoftile = "<set>" + tiles + "</set>";
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(setoftile);
             XmlNode newNode = doc.DocumentElement;
             Parser parser = new Parser();
+            Tile ans_tile = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Tile ans_tile2 = new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 });
+            List<Tile> ans_tiles = new List<Tile>();
+            ans_tiles.Add(ans_tile);
+            ans_tiles.Add(ans_tile2);
             HashSet<Tile> result = parser.SetofTilesXML(newNode);
             Assert.AreEqual(2, result.Count);
-
+            List<Tile> result_list = result.ToList();
+            Boolean good = false;
+            for (int j = 0; j < ans_tiles.Count; j++)
+            {
+                good = false;
+                for (int i = 0; i < result_list.Count; i++)
+                {
+                    if(!result_list[i].IsDifferent(ans_tiles[j])){
+                        good = true;
+                        break;
+                    }
+                }
+                Assert.IsTrue(good);
+            }
         }
         [TestMethod]
         public void TestParserSetofTilesDupli()
         {
+            // (0, 1, 2, 3, 4, 5, 6, 7), id 1
+            // (0, 4, 1, 5, 2, 6, 3, 7), id 9
             string tiles = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
             string setoftile = "<set>" + tiles + "</set>";
             XmlDocument doc = new XmlDocument();
@@ -321,6 +344,8 @@ namespace TsuroTheSecondTests
             board += "</board>";
             playturn += board;
             // set of tile
+            // (0, 1, 2, 3, 4, 5, 6, 7), id 1
+            // (0, 4, 1, 5, 2, 6, 3, 7), id 9
             string tiles = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
             string setoftile = "<set>" + tiles + "</set>";
             playturn += setoftile;
@@ -332,6 +357,22 @@ namespace TsuroTheSecondTests
             doc.LoadXml(setoftile);
             XmlNode newNode = doc.DocumentElement;
             Parser parser = new Parser();
+            //(Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> tokenPosition, HashSet<Tile> SetofTiles, int num) = parser.PlayTurnXML(newNode);
+            //Tile ans_tile = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            //Tile ans_tile2 = new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 });
+            //Assert.AreEqual(2, TilesTobePlaced.Count);
+            //Assert.AreEqual(1, TilesTobePlaced[(3, 4)].id);
+            //Assert.AreEqual(9, TilesTobePlaced[(4, 4)].id);
+            //Assert.IsTrue(ans_tile.CompareByPath(TilesTobePlaced[(3, 4)]));
+            //Assert.IsTrue(ans_tile2.CompareByPath(TilesTobePlaced[(4, 4)]));
+            //Assert.AreEqual(2, tokenPosition.Count);
+            //Assert.AreEqual(new Position(2, 2, 5, false), tokenPosition["blue"].Item1);
+            //Assert.AreEqual(new Position(2, 3, 0, false), tokenPosition["blue"].Item2);
+            //Assert.AreEqual(new Position(3, 1, 3, false), tokenPosition["red"].Item1);
+            //Assert.AreEqual(new Position(4, 1, 6, false), tokenPosition["red"].Item2);
+            //Assert.AreEqual(2, SetofTiles);
+            ////SetofTiles.Contains()
+            //Assert.AreEqual(34, num);
         }
     }
 }

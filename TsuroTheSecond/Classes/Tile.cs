@@ -115,6 +115,16 @@ namespace TsuroTheSecond
             return this.PathMap() == comparison.PathMap();
         }
 
+
+        //public static bool operator == (Tile a, Tile b)
+        //{
+        //    return !a.IsDifferent(b);
+        //}
+        //public static bool operator != (Tile a, Tile b)
+        //{
+        //    return a.IsDifferent(b);
+        //}
+
         public Boolean IsDifferent(Tile comparison){
             // returns true or false by comparing the tiles. Doesn't rely on how it looks
             Tile Copyofthis = new Tile(this);
