@@ -85,7 +85,7 @@ namespace TsuroTheSecond
         public Dictionary<string, (Position, Position)> PawnsXML(XmlNode pawns)
         {
             Dictionary<string, (Position, Position)> result = new Dictionary<string, (Position, Position)>();
-            XmlNodeList entry_list = pawns.SelectNodes("//ent");
+            XmlNodeList entry_list = pawns.SelectNodes("ent");
             foreach (XmlNode entry in entry_list)
             {
                 string color = this.ColorXML(entry.FirstChild);
@@ -140,6 +140,13 @@ namespace TsuroTheSecond
                 result.Add((x, y), tile);
             }
             return result;
+        }
+
+        public (Dictionary<(int, int), Tile>, Dictionary<string, (Position, Position)>) BoardXML(XmlNode board)
+        {
+            Dictionary<(int, int), Tile> TilesTobePlaced = this.TilesXML(board.FirstChild);
+            Dictionary<string, (Position, Position)> TokenPositions = this.PawnsXML(board.LastChild);
+            return (TilesTobePlaced, TokenPositions);
         }
 
     }
