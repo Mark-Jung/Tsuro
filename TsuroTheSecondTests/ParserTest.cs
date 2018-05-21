@@ -294,12 +294,12 @@ namespace TsuroTheSecondTests
             doc.LoadXml(setoftile);
             XmlNode newNode = doc.DocumentElement;
             Parser parser = new Parser();
+            HashSet<Tile> result = parser.SetofTilesXML(newNode);
             Tile ans_tile = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
             Tile ans_tile2 = new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 });
             List<Tile> ans_tiles = new List<Tile>();
             ans_tiles.Add(ans_tile);
             ans_tiles.Add(ans_tile2);
-            HashSet<Tile> result = parser.SetofTilesXML(newNode);
             Assert.AreEqual(2, result.Count);
             List<Tile> result_list = result.ToList();
             Boolean good = false;
@@ -354,25 +354,45 @@ namespace TsuroTheSecondTests
             playturn += n;
             playturn += "</play-turn>";
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(setoftile);
+            doc.LoadXml(playturn);
             XmlNode newNode = doc.DocumentElement;
             Parser parser = new Parser();
-            //(Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> tokenPosition, HashSet<Tile> SetofTiles, int num) = parser.PlayTurnXML(newNode);
-            //Tile ans_tile = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
-            //Tile ans_tile2 = new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 });
-            //Assert.AreEqual(2, TilesTobePlaced.Count);
-            //Assert.AreEqual(1, TilesTobePlaced[(3, 4)].id);
-            //Assert.AreEqual(9, TilesTobePlaced[(4, 4)].id);
-            //Assert.IsTrue(ans_tile.CompareByPath(TilesTobePlaced[(3, 4)]));
-            //Assert.IsTrue(ans_tile2.CompareByPath(TilesTobePlaced[(4, 4)]));
-            //Assert.AreEqual(2, tokenPosition.Count);
-            //Assert.AreEqual(new Position(2, 2, 5, false), tokenPosition["blue"].Item1);
-            //Assert.AreEqual(new Position(2, 3, 0, false), tokenPosition["blue"].Item2);
-            //Assert.AreEqual(new Position(3, 1, 3, false), tokenPosition["red"].Item1);
-            //Assert.AreEqual(new Position(4, 1, 6, false), tokenPosition["red"].Item2);
-            //Assert.AreEqual(2, SetofTiles);
-            ////SetofTiles.Contains()
-            //Assert.AreEqual(34, num);
+            (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> tokenPosition, HashSet<Tile> SetofTiles, int num) = parser.PlayTurnXML(newNode);
+            Tile ans_tile = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Tile ans_tile2 = new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 });
+            // board check
+            Assert.AreEqual(2, TilesTobePlaced.Count);
+            Assert.AreEqual(1, TilesTobePlaced[(3, 4)].id);
+            Assert.AreEqual(9, TilesTobePlaced[(4, 4)].id);
+            Assert.IsTrue(ans_tile.CompareByPath(TilesTobePlaced[(3, 4)]));
+            Assert.IsTrue(ans_tile2.CompareByPath(TilesTobePlaced[(4, 4)]));
+            Assert.AreEqual(2, tokenPosition.Count);
+            Assert.AreEqual(new Position(2, 2, 5, false), tokenPosition["blue"].Item1);
+            Assert.AreEqual(new Position(2, 3, 0, false), tokenPosition["blue"].Item2);
+            Assert.AreEqual(new Position(3, 1, 3, false), tokenPosition["red"].Item1);
+            Assert.AreEqual(new Position(4, 1, 6, false), tokenPosition["red"].Item2);
+            // set of tiles check
+            List<Tile> ans_tiles = new List<Tile>();
+            ans_tiles.Add(ans_tile);
+            ans_tiles.Add(ans_tile2);
+            Assert.AreEqual(2, SetofTiles.Count);
+            List<Tile> result_list = SetofTiles.ToList();
+            Boolean good = false;
+            for (int j = 0; j < ans_tiles.Count; j++)
+            {
+                good = false;
+                for (int i = 0; i < result_list.Count; i++)
+                {
+                    if (!result_list[i].IsDifferent(ans_tiles[j]))
+                    {
+                        good = true;
+                        break;
+                    }
+                }
+                Assert.IsTrue(good);
+            }
+            // num check
+            Assert.AreEqual(34, num);
         }
     }
 }

@@ -160,7 +160,7 @@ namespace TsuroTheSecond
         public HashSet<Tile> SetofTilesXML(XmlNode SetofTiles){
             HashSet<Tile> result = new HashSet<Tile>();
             Boolean same = false;
-            XmlNodeList tilesXML = SetofTiles.SelectNodes("/set/tile");
+            XmlNodeList tilesXML = SetofTiles.ChildNodes;
 
             foreach( XmlNode tileXML in tilesXML){
                 Tile newTile = this.TileXML(tileXML);
@@ -175,6 +175,16 @@ namespace TsuroTheSecond
                 }
             }
             return result;
+        }
+
+        public (Dictionary<(int, int), Tile>, Dictionary<string, (Position, Position)>, HashSet<Tile>, int) PlayTurnXML(XmlNode playturn)
+        {
+            XmlNode board = playturn.FirstChild;
+            XmlNode set_of_tiles = playturn.SelectSingleNode("/play-turn/set");
+            XmlNode num = playturn.LastChild;
+
+            (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions) = this.BoardXML(board);
+            return (TilesTobePlaced, TokenPositions, this.SetofTilesXML(set_of_tiles), this.NXML(num));
         }
 
     }
