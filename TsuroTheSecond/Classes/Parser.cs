@@ -177,15 +177,19 @@ namespace TsuroTheSecond
             return result;
         }
 
-        public (Dictionary<(int, int), Tile>, Dictionary<string, (Position, Position)>, HashSet<Tile>, int) PlayTurnXML(XmlNode playturn)
+        public (Dictionary<(int, int), Tile>, Dictionary<string, (Position, Position)>, HashSet<Tile>, List<int>) PlayTurnXML(XmlNode playturn)
         {
             XmlNode board = playturn.FirstChild;
             XmlNode set_of_tiles = playturn.SelectSingleNode("/play-turn/set");
-            XmlNode num = playturn.LastChild;
+            XmlNodeList numsXML = playturn.SelectNodes("/play-turn/n");
+            List<int> nums = new List<int>();
+            foreach(XmlNode num in numsXML) {
+                nums.Add(this.NXML(num));
+
+            }
 
             (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions) = this.BoardXML(board);
-            return (TilesTobePlaced, TokenPositions, this.SetofTilesXML(set_of_tiles), this.NXML(num));
+            return (TilesTobePlaced, TokenPositions, this.SetofTilesXML(set_of_tiles), nums);
         }
-
     }
 }
