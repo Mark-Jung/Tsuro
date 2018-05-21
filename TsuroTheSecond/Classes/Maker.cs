@@ -18,41 +18,40 @@ namespace TsuroTheSecond
             return nxml;
         }
 
-        public XElement ConnectXML(XElement n1, XElement n2) {
-            XElement connectxml = new XElement("connect",
-                                           n1,
-                                           n2
-                                           );
+        public XElement ConnectXML(int n1, int n2) {
+            XElement n1xml = this.NXML(n1);
+            XElement n2xml = this.NXML(n2);
+
+            XElement connectxml = new XElement("connect", n1xml, n2xml);
             return connectxml;
         }
 
-        public XElement TileXML(XElement connect1, XElement connect2, XElement connect3, XElement connect4) {
-            XElement tilexml = new XElement("tile",
-                                            connect1,
-                                            connect2,
-                                            connect3,
-                                            connect3,
-                                            connect4
-                                           );
+        public XElement TileXML(int port1, int port2, int port3, int port4, int port5, int port6, int port7, int port8) {
+            XElement connect1 = this.ConnectXML(port1, port2);
+            XElement connect2 = this.ConnectXML(port3, port4);
+            XElement connect3 = this.ConnectXML(port5, port6);
+            XElement connect4 = this.ConnectXML(port7, port8);
+
+            XElement tilexml = new XElement("tile", connect1, connect2, connect3, connect4);
             return tilexml;
         }
 
         public XElement HVXML(string horv){
             if(horv == "h"){
-                XElement hxml = new XElement("h");
+                XElement hxml = new XElement("h","");
                 return hxml;
             } else {
-                XElement vxml = new XElement("v");
+                XElement vxml = new XElement("v","");
                 return vxml;
             }
         }
 
-        public XElement PawnLocXML(XElement horv, XElement x, XElement y) {
-            XElement pawnlocxml = new XElement("pawn-loc",
-                                               horv,
-                                               x,
-                                               y
-                                              );
+        public XElement PawnLocXML(string horv, int x, int y) {
+            XElement horvxml = this.HVXML(horv);
+            XElement xxml = this.NXML(x);
+            XElement yxml = this.NXML(y);
+
+            XElement pawnlocxml = new XElement("pawn-loc", horvxml, xxml, yxml);
             return pawnlocxml; 
         }
 
