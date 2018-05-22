@@ -203,7 +203,6 @@ namespace TsuroTheSecond
                 }
             }
 
-
             int tileCount = 0;
             foreach(List<Tile> row in board.tiles) {
                 foreach(Tile t in row) {
