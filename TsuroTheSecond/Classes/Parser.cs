@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using System.Linq;
 using System.Xml;
 using System.Collections.Generic;
 
@@ -177,6 +178,19 @@ namespace TsuroTheSecond
             return result;
         }
 
+        public List<Tile> ListofTilesXML(XmlNode TileList)
+        {
+            List<Tile> result = new List<Tile>();
+            XmlNodeList tilesXML = TileList.ChildNodes;
+
+            foreach (XmlNode tileXML in tilesXML)
+            {
+                Tile newTile = this.TileXML(tileXML);
+                result.Add(newTile);
+            }
+            return result;
+        }
+
         public (Dictionary<(int, int), Tile>, Dictionary<string, (Position, Position)>, HashSet<Tile>, List<int>) PlayTurnXML(XmlNode playturn)
         {
             XmlNode board = playturn.FirstChild;
@@ -190,6 +204,23 @@ namespace TsuroTheSecond
 
             (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions) = this.BoardXML(board);
             return (TilesTobePlaced, TokenPositions, this.SetofTilesXML(set_of_tiles), nums);
+        }
+
+        public (string, List<Tile>, Boolean) SPlayerXML(XmlNode splayer)
+        {
+            XmlNode color = splayer.FirstChild;
+            XmlNode setoftiles = splayer.LastChild;
+            return (this.ColorXML(color), this.SetofTilesXML(setoftiles).ToList(), splayer.Name == "splayer-dragon");
+        }
+
+        public Dictionary<string, (List<Tile>, Boolean)> ListSPlayerXML(XmlNode listofsplayer)
+        {
+            Dictionary<string, (List<Tile>, Boolean)> result = new Dictionary<string, (List<Tile>, bool)>();
+            foreach( XmlNode splayer in listofsplayer.ChildNodes){
+                (string color, List<Tile> hand, Boolean isdragon) = this.SPlayerXML(splayer);
+                result.Add(color, (hand, isdragon));
+            }
+            return result;
         }
     }
 }

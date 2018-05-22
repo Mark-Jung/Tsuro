@@ -316,6 +316,29 @@ namespace TsuroTheSecondTests
                 Assert.IsTrue(good);
             }
         }
+
+        [TestMethod]
+        public void TestParserListofTile()
+        {
+            // (0, 1, 2, 3, 4, 5, 6, 7), id 1
+            // (0, 4, 1, 5, 2, 6, 3, 7), id 9
+            string tiles = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
+            string setoftile = "<set>" + tiles + "</set>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(setoftile);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            List<Tile> result = parser.ListofTilesXML(newNode);
+            Tile ans_tile = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Tile ans_tile2 = new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 });
+            List<Tile> ans_tiles = new List<Tile>();
+            ans_tiles.Add(ans_tile);
+            ans_tiles.Add(ans_tile2);
+            Assert.AreEqual(2, result.Count);
+            Assert.IsTrue(!ans_tile.IsDifferent(result[0]));
+            Assert.IsTrue(!ans_tile2.IsDifferent(result[1]));
+        }
+
         [TestMethod]
         public void TestParserSetofTilesDupli()
         {
@@ -475,6 +498,111 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(2, nums.Count);
             Assert.AreEqual(3, nums[0]);
             Assert.AreEqual(2, nums[1]);
+        }
+        [TestMethod]
+        public void TestParserSPlayerDragon()
+        {
+            string splayer = "<splayer-dragon>";
+            string color = "<color>blue</color>";
+            // (0, 1, 2, 3, 4, 5, 6, 7), id 1
+            // (0, 4, 1, 5, 2, 6, 3, 7), id 9
+            // (0, 3, 1, 5, 2, 7, 4, 6), id 12
+            string tiles = "<tile><connect><n>0</n><n>3</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>7</n></connect><connect><n>4</n><n>6</n></connect></tile><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
+            string setoftile = "<set>" + tiles + "</set>";
+            splayer += color;
+            splayer += setoftile;
+            splayer += "</splayer-dragon>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(splayer);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+
+            (string playercolor, List<Tile> hand, Boolean IsDragon) = parser.SPlayerXML(newNode);
+
+            Assert.AreEqual("blue", playercolor);
+            Assert.IsTrue(IsDragon);
+            Tile ans_tile0 = new Tile(12, new List<int> { 0, 3, 1, 5, 2, 7, 4, 6});
+            Tile ans_tile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Tile ans_tile2 = new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 });
+        }
+
+        [TestMethod]
+        public void TestParserSPlayerNoDragon()
+        {
+            string splayer = "<splayer-nodragon>";
+            string color = "<color>blue</color>";
+            // (0, 1, 2, 3, 4, 5, 6, 7), id 1
+            // (0, 4, 1, 5, 2, 6, 3, 7), id 9
+            // (0, 3, 1, 5, 2, 7, 4, 6), id 12
+            string tiles = "<tile><connect><n>0</n><n>3</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>7</n></connect><connect><n>4</n><n>6</n></connect></tile><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
+            string setoftile = "<set>" + tiles + "</set>";
+            splayer += color;
+            splayer += setoftile;
+            splayer += "</splayer-nodragon>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(splayer);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+
+            (string playercolor, List<Tile> hand, Boolean IsDragon) = parser.SPlayerXML(newNode);
+
+            Assert.AreEqual("blue", playercolor);
+            Assert.IsFalse(IsDragon);
+            Tile ans_tile0 = new Tile(12, new List<int> { 0, 3, 1, 5, 2, 7, 4, 6 });
+            Tile ans_tile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Tile ans_tile2 = new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 });
+        }
+
+        [TestMethod]
+        public void TestParserSPlayerList(){
+            string listofsplayer = "<list>";
+            string splayer = "<splayer-nodragon>";
+            string color = "<color>blue</color>";
+            // (0, 1, 2, 3, 4, 5, 6, 7), id 1
+            // (0, 4, 1, 5, 2, 6, 3, 7), id 9
+            // (0, 3, 1, 5, 2, 7, 4, 6), id 12
+            string tiles = "<tile><connect><n>0</n><n>3</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>7</n></connect><connect><n>4</n><n>6</n></connect></tile><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
+            string setoftile = "<set>" + tiles + "</set>";
+            splayer += color;
+            splayer += setoftile;
+            splayer += "</splayer-nodragon>";
+            string splayer_drag = "<splayer-dragon>";
+            string color_red = "<color>red</color>";
+            // (0, 1, 2, 3, 4, 5, 6, 7), id 1
+            // (0, 4, 1, 5, 2, 6, 3, 7), id 9
+            // (0, 3, 1, 5, 2, 7, 4, 6), id 12
+            string tiles_drag = "<tile><connect><n>0</n><n>3</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>7</n></connect><connect><n>4</n><n>6</n></connect></tile><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
+            string setoftile_drag = "<set>" + tiles_drag + "</set>";
+            splayer_drag += color_red;
+            splayer_drag += setoftile_drag;
+            splayer_drag += "</splayer-dragon>";
+            listofsplayer += splayer;
+            listofsplayer += splayer_drag;
+            listofsplayer += "</list>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(listofsplayer);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            Tile ans_tile0 = new Tile(12, new List<int> { 0, 3, 1, 5, 2, 7, 4, 6 });
+            Tile ans_tile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Tile ans_tile2 = new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 });
+            List<Tile> ans_tiles = new List<Tile>();
+            ans_tiles.Add(ans_tile0);
+            ans_tiles.Add(ans_tile1);
+            ans_tiles.Add(ans_tile2);
+
+            Dictionary<string, (List<Tile>, Boolean)> result = parser.ListSPlayerXML(newNode);
+
+            (List<Tile> red_hand, Boolean red_isDrag) = result["red"];
+            (List<Tile> blue_hand, Boolean blue_isDrag) = result["blue"];
+            Assert.IsTrue(red_isDrag);
+            Assert.IsFalse(blue_isDrag);
+            for(int i = 0; i < 3; i++){
+                Assert.IsTrue(!ans_tiles[i].IsDifferent(blue_hand[i]));
+                Assert.IsTrue(!ans_tiles[i].IsDifferent(red_hand[i]));
+            }
+
+
         }
     }
 }
