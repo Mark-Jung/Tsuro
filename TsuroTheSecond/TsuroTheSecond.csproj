@@ -12,5 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Classes\Players\EmptyClass.cs" />
+    <Compile Remove="Main.cs" />
   </ItemGroup>
 </Project>

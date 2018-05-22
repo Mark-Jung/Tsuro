@@ -18,6 +18,7 @@ namespace TsuroTheSecond
 
         public Server() {
             gameState = State.start;
+            Console.WriteLine("Starting game with state: start");
             // initializes the game
             dragonQueue = new List<Player>();
             deck = ShuffleDeck(Constants.tiles);
@@ -86,6 +87,8 @@ namespace TsuroTheSecond
                 p.iplayer.Initialize(p.Color, alive.Select(x => x.Color).ToList());
             }
             gameState = State.loop;
+            //Console.WriteLine("Currently in InitPlayerPositions Server.cs");
+            //Console.WriteLine("Current state is: loop");
 
             foreach(Player p in alive) {
                 Position position = new Position(6, 1, 7);
@@ -101,9 +104,12 @@ namespace TsuroTheSecond
                 Console.WriteLine("Initialized player: " + p.iplayer.GetName() + " with " + p.Color);
                 this.board.AddPlayerToken(p.Color, position);
                 // initialize hand
+                Console.WriteLine("Initial Tile draw: ");
                 this.DrawTile(p, deck);
                 this.DrawTile(p, deck);
                 this.DrawTile(p, deck);
+                Console.WriteLine("\n");
+                Console.WriteLine("\n");
             }
 
         }
@@ -134,11 +140,13 @@ namespace TsuroTheSecond
         }
 
         public Boolean LegalPlay(Player player, Board b, Tile tile) {
-            if (gameState != State.loop)
+            if (!(gameState == State.loop || gameState == State.safe))
             {
                 throw new Exception("Invalid game state");
             }
             gameState = State.safe;
+            //Console.WriteLine("Currently in LegalPlay, Server.cs");
+            //Console.WriteLine("game state is: safe");
 
             // Check for valid tile
             if (tile == null || !player.TileinHand(tile)) {
@@ -275,9 +283,10 @@ namespace TsuroTheSecond
             if (player.Hand.Count > 0) {
                 deck.AddRange(player.Hand);
                 int dragonCount = dragonQueue.Count;
-                for (int i = 0; i < dragonCount; i++) {
-                    DrawTile(dragonQueue[i], deck);
-                    dragonQueue.Remove(dragonQueue[i]);
+
+                while(dragonQueue.Count > 0){
+                    DrawTile(dragonQueue[0], deck);
+                    dragonQueue.Remove(dragonQueue[0]);
                 }
             }
         }
@@ -292,7 +301,7 @@ namespace TsuroTheSecond
 
         public void DrawTile(Player player, List<Tile> d) {
             // how is this supposed to work with an interface?
-            Console.WriteLine(d.Count);
+            //Console.WriteLine(d.Count);
             if (player.Hand.Count >= 3) {
                 throw new InvalidOperationException("Player can't have more than 3 cards in hand");
             }
@@ -302,7 +311,9 @@ namespace TsuroTheSecond
             } else {
                 Tile t = d[0];
                 d.RemoveAt(0);
-                player.AddTiletoHand(t); 
+                player.AddTiletoHand(t);
+                Console.WriteLine("Player " + player.iplayer.GetName() + " drew Tile!");
+                t.PrintMe();
             }
 
         }

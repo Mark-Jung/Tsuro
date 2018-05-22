@@ -130,6 +130,12 @@ namespace TsuroTheSecond
             }
             return (next_x, next_y);
         }
+        public void PrintMe(){
+            Console.WriteLine("x: " + this.x);
+            Console.WriteLine("y: " + this.y);
+            Console.WriteLine("port: " + this.port);
+        }
+
 
     }
 }

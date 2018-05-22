@@ -11,7 +11,6 @@ namespace TsuroTheSecond
 
         public Tile PlayTurn(Board board, List<Tile> hand, int unused)
         {
-            Console.WriteLine(playerState);
             if (playerState != State.loop)
             {
                 throw new Exception("Player should be in loop state");
@@ -19,7 +18,7 @@ namespace TsuroTheSecond
             Random random = new Random();
             // all legal options
             List<Tile> legal_options = board.AllPossibleTiles(this.color, hand);
-            Console.WriteLine(legal_options.Count);
+            // Console.WriteLine(legal_options.Count);
             // all legal options, rid of overlapped.
             IDictionary<string, Tile> unique_legal_options = new Dictionary<string, Tile>();
             foreach (Tile each in legal_options)
