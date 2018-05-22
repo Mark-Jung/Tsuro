@@ -183,7 +183,7 @@ namespace TsuroTheSecondTests
         //}
         [TestMethod]
         public void TestParserXY(){
-            string xmlContent = "<xy><x><n>3</n></x><y><n>4</n></y></xy>";
+            string xmlContent = "<xy><x>3</x><y>4</y></xy>";
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xmlContent);
             XmlNode newNode = doc.DocumentElement;
@@ -601,8 +601,6 @@ namespace TsuroTheSecondTests
                 Assert.IsTrue(!ans_tiles[i].IsDifferent(blue_hand[i]));
                 Assert.IsTrue(!ans_tiles[i].IsDifferent(red_hand[i]));
             }
-
-
         }
     }
 }

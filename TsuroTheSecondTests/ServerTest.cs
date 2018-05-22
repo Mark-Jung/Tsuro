@@ -500,14 +500,20 @@ namespace TsuroTheSecondTests
 
             server.InitPlayerPositions();
 
-            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
-            server.board.AddPlayerToken("green", new Position(0, -1, 4));
-            server.board.AddPlayerToken("hotpink", new Position(1, -1, 4));
+            server.board.initialPositions["blue"] = new Position(0, -1, 5);
+            server.board.initialPositions["green"] = new Position(0, -1, 4);
+            server.board.initialPositions["hotpink"] = new Position(1, -1, 4);
+
+            server.board.tokenPositions["blue"] = new Position(0, -1, 5);
+            server.board.tokenPositions["green"] = new Position(0, -1, 4);
+            server.board.tokenPositions["hotpink"] = new Position(1, -1, 4);
+
+            server.alive[0].Hand = new List<Tile> { new Tile(3, new List<int> { 1, 2, 3, 4, 5, 6, 7, 0 }), new Tile(2, new List<int> { 4, 7, 3, 2, 0, 1, 5, 6 }) };
 
             Tile playTile = new Tile(1, new List<int>{0, 7, 1, 2, 3, 4, 5, 6});
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck, 
+            (List<Tile> deck, List<Player> alive, List<Player> dead, Board board, Boolean GameDone, List<Player> Victors) = server.PlayATurn(server.deck, 
                                                                                                    server.alive, 
                                                                                                    server.dead, 
                                                                                                    server.board, 
@@ -529,29 +535,51 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(0, server.board.tokenPositions[server.alive[0].Color].y);
             Assert.AreEqual(2, server.board.tokenPositions[server.alive[0].Color].port);
 
+            Assert.IsFalse(GameDone);
 
+            Assert.AreEqual(2, alive.Count);
+            Assert.AreEqual(1, dead.Count);
+            // dead
+            Assert.AreEqual(-1, board.tokenPositions["blue"].x);
+            Assert.AreEqual(0, board.tokenPositions["blue"].y);
+            Assert.AreEqual(2, board.tokenPositions["blue"].port);
+            Assert.AreEqual(-1, board.tokenPositions[server.dead[0].Color].x);
+            Assert.AreEqual(0, board.tokenPositions[server.dead[0].Color].y);
+            Assert.AreEqual(2, board.tokenPositions[server.dead[0].Color].port);
+            // alive
+            Assert.AreEqual(0, board.tokenPositions["green"].x);
+            Assert.AreEqual(0, board.tokenPositions["green"].y);
+            Assert.AreEqual(2, board.tokenPositions["green"].port);
+            Assert.AreEqual(0, board.tokenPositions[server.alive[0].Color].x);
+            Assert.AreEqual(0, board.tokenPositions[server.alive[0].Color].y);
+            Assert.AreEqual(2, board.tokenPositions[server.alive[0].Color].port);
 
         }
 
         [TestMethod]
-        public void TestPlayTurn2TilePath()
+        public void TestPlayATurn2TilePath()
         {
             AddThreePlayers();
+            server.InitPlayerPositions();
 
+            server.board.initialPositions["blue"] = new Position(0, -1, 5);
+            server.board.initialPositions["green"] = new Position(0, -1, 4);
+            server.board.initialPositions["hotpink"] = new Position(1, -1, 4);
 
-            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
-            server.board.AddPlayerToken("green", new Position(0, -1, 4));
-            server.board.AddPlayerToken("hotpink", new Position(4, -1, 4));
+            server.board.tokenPositions["blue"] = new Position(0, -1, 5);
+            server.board.tokenPositions["green"] = new Position(0, -1, 4);
+            server.board.tokenPositions["hotpink"] = new Position(1, -1, 4);
+
+            server.alive[0].Hand = new List<Tile> { new Tile(5, new List<int> { 1, 2, 3, 4, 5, 6, 7, 0 }), new Tile(4, new List<int> { 4, 7, 3, 2, 0, 1, 5, 6 }) };
 
 
             Tile playTile = new Tile(1, new List<int> { 0, 4, 1, 5, 3, 2, 6, 7 });
-            Assert.AreEqual("blue", server.alive[0].Color);
 
             Tile secondTile = new Tile(2, new List<int> { 0, 7, 2, 6, 1, 3, 5, 4 });
             server.board.PlaceTile(secondTile, 0, 1);
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
+            (List<Tile> deck, List<Player> alive, List<Player> dead, Board board, Boolean GameDone, List<Player> Victors) = server.PlayATurn(server.deck,
                                                                                                    server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
@@ -580,37 +608,37 @@ namespace TsuroTheSecondTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Player should have 2 or less tiles in hand")]
-        public void TestPlayTurnPlayerTooManyTilesInHand()
+        public void TestPlayATurnPlayerTooManyTilesInHand()
         {
             AddThreePlayers();
 
             server.InitPlayerPositions();
 
-            for (int i = 0; i < 3; i++) {
-                server.alive[0].AddTiletoHand(Constants.tiles[i]);
-            }
+            //for (int i = 0; i < 3; i++) {
+            //    server.alive[0].AddTiletoHand(Constants.tiles[i]);
+            //}
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
-                                                                                                   server.alive,
+            (List<Tile> deck, List<Player> alive, List<Player> dead, Board board, Boolean GameDone, List<Player> Victors) = server.PlayATurn(server.deck,
+                                                                                                                        server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
-                                                                                                   Constants.tiles[3]);
+                                                                                                                                             Constants.tiles[3]);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Tile to be played and tiles in hand are not unique")]
-        public void TestPlayTurnDuplicateTiles()
+        public void TestPlayATurnDuplicateTiles()
         {
             AddThreePlayers();
 
             server.InitPlayerPositions();
 
-            server.alive[0].AddTiletoHand(Constants.tiles[0]);
+            server.alive[0].Hand[0] = Constants.tiles[0];
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
-                                                                                                   server.alive,
+            (List<Tile> deck, List<Player> alive, List<Player> dead, Board board, Boolean GameDone, List<Player> Victors) = server.PlayATurn(server.deck,
+                                                                                                                        server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
                                                                                                    Constants.tiles[0]);
@@ -618,19 +646,19 @@ namespace TsuroTheSecondTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Tile to be played and tiles in hand are not unique")]
-        public void TestPlayTurnDuplicateTilesRotated()
+        public void TestPlayATurnDuplicateTilesRotated()
         {
             AddThreePlayers();
 
             server.InitPlayerPositions();
 
-            Tile tile = Constants.tiles[0];
+            Tile tile = new Tile(Constants.tiles[0]);
             tile.Rotate();
-            server.alive[0].AddTiletoHand(tile);
+            server.alive[0].Hand[0] = tile;
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
-                                                                                                   server.alive,
+            (List<Tile> deck, List<Player> alive, List<Player> dead, Board board, Boolean GameDone, List<Player> Victors) = server.PlayATurn(server.deck,
+                                                                                                                        server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
                                                                                                    Constants.tiles[0]);
@@ -638,20 +666,20 @@ namespace TsuroTheSecondTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Tile to be placed, tiles in hand, and tiles on board are not unique")]
-        public void TestPlayTurnDuplicateTilesOnBoardAndHand()
+        public void TestPlayTurnADuplicateTilesOnBoardAndHand()
         {
             AddThreePlayers();
 
             server.InitPlayerPositions();
 
-            Tile tile = Constants.tiles[0];
+            Tile tile = new Tile(Constants.tiles[0]);
             tile.Rotate();
-            server.alive[0].AddTiletoHand(tile);
-            server.board.PlaceTile(Constants.tiles[0], 0, 0);
+            server.alive[0].Hand[0] = tile;
+            server.board.PlaceTile(tile, 0, 0);
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
-                                                                                                   server.alive,
+            (List<Tile> deck, List<Player> alive, List<Player> dead, Board board, Boolean GameDone, List<Player> Victors) = server.PlayATurn(server.deck,
+                                                                                                                        server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
                                                                                                    Constants.tiles[1]);
@@ -659,7 +687,7 @@ namespace TsuroTheSecondTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Tile to be placed, tiles in hand, and tiles on board are not unique")]
-        public void TestPlayTurnDuplicateTilesOnBoardAndPlay()
+        public void TestPlayATurnDuplicateTilesOnBoardAndPlay()
         {
             AddThreePlayers();
 
@@ -670,8 +698,8 @@ namespace TsuroTheSecondTests
             server.board.PlaceTile(Constants.tiles[0], 0, 0);
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
-                                                                                                   server.alive,
+            (List<Tile> deck, List<Player> alive, List<Player> dead, Board board, Boolean GameDone, List<Player> Victors) = server.PlayATurn(server.deck,
+                                                                                                                        server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
                                                                                                    Constants.tiles[0]);

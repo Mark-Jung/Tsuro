@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using System.Collections.Generic;
 namespace TsuroTheSecond
 {
     public class Maker
@@ -26,13 +27,14 @@ namespace TsuroTheSecond
             return connectxml;
         }
 
-        public XElement TileXML(int port1, int port2, int port3, int port4, int port5, int port6, int port7, int port8) {
-            XElement connect1 = this.ConnectXML(port1, port2);
-            XElement connect2 = this.ConnectXML(port3, port4);
-            XElement connect3 = this.ConnectXML(port5, port6);
-            XElement connect4 = this.ConnectXML(port7, port8);
+        public XElement TileXML(Tile input) {
+            List<XElement> connects = new List<XElement>();
+            foreach(List<int> path in input.paths){
+                XElement connect = this.ConnectXML(path[0], path[1]);
+                connects.Add(connect);
+            }
 
-            XElement tilexml = new XElement("tile", connect1, connect2, connect3, connect4);
+            XElement tilexml = new XElement("tile", connects[0], connects[1], connects[2], connects[3]);
             return tilexml;
         }
 
@@ -55,5 +57,17 @@ namespace TsuroTheSecond
             return pawnlocxml; 
         }
 
+        //public XElement MaybeListofSplayersXML(){
+            
+        //}
+
+        public XElement XYXML(int x, int y) {
+            XElement xy = new XElement("xy", new XElement("x", x), new XElement("y", y));
+            return xy;
+        }
+
+        //public XElement TilesListXML(List<(Tile, int, int)> listoftiles){
+        //    XElement ListofTiles = new XElement("list", "");
+        //}
     }
 }

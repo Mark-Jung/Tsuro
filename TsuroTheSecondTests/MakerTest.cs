@@ -106,9 +106,20 @@ namespace TsuroTheSecondTests
 
             XDocument expected_doc = XDocument.Parse(xmltile);
 
+            Tile test_tile = new Tile(1, new List<int> { 1, 2, 3, 4, 5, 6, 0, 7 });
+
             // testing
-            XElement tilexml = maker.TileXML(1, 2, 3, 4, 5, 6, 0, 7);
+            XElement tilexml = maker.TileXML(test_tile);
             Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, tilexml)); 
+        }
+
+        [TestMethod]
+        public void TestMakerXY()
+        {
+            // expected
+            string xy = "<xy><x>2</x><y>4</y></xy>";
+            XDocument expected_doc = XDocument.Parse(xy);
+            Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, maker.XYXML(2, 4)));
         }
 
 

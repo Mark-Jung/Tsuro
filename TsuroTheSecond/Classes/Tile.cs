@@ -73,12 +73,12 @@ namespace TsuroTheSecond
 
         public void PrintMe()
         {
+            string statement = "Tile id: " + this.id;
+            statement += "| Tile paths: ";
             foreach (List<int> each in this.paths){
-                Console.WriteLine(each[0]);
-                Console.WriteLine(" leads to ");
-                Console.WriteLine(each[1]);
-                Console.WriteLine("\n");
+                statement += "[" + each[0] + ", " + each[1] + "]";
             }
+            Console.WriteLine(statement);
         }
         public string PathMap(){
             // init all to -1.
@@ -115,16 +115,6 @@ namespace TsuroTheSecond
             return this.PathMap() == comparison.PathMap();
         }
 
-
-        //public static bool operator == (Tile a, Tile b)
-        //{
-        //    return !a.IsDifferent(b);
-        //}
-        //public static bool operator != (Tile a, Tile b)
-        //{
-        //    return a.IsDifferent(b);
-        //}
-
         public Boolean IsDifferent(Tile comparison){
             // returns true or false by comparing the tiles. Doesn't rely on how it looks
             Tile Copyofthis = new Tile(this);
@@ -134,7 +124,6 @@ namespace TsuroTheSecond
                 PossibleofThis.Add(LoopCopy);
                 Copyofthis.Rotate();
             }
-
             foreach (Tile version in PossibleofThis)
             {
                 if (version.CompareByPath(comparison)) {

@@ -124,10 +124,9 @@ namespace TsuroTheSecond
         }
 
         public (int, int) XYXML(XmlNode xy){
-            int x, y;
             XmlNodeList XandY = xy.ChildNodes;
-            x = this.NXML(XandY.Item(0).FirstChild);
-            y = this.NXML(XandY.Item(1).FirstChild);
+            int x = Convert.ToInt32(XandY.Item(0).InnerText);
+            int y = Convert.ToInt32(XandY.Item(1).InnerText);
             return (x, y);
         }
 
