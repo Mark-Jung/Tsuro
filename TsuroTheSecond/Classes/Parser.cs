@@ -191,5 +191,29 @@ namespace TsuroTheSecond
             (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions) = this.BoardXML(board);
             return (TilesTobePlaced, TokenPositions, this.SetofTilesXML(set_of_tiles), nums);
         }
+
+        public (Dictionary<(int, int), Tile>, Dictionary<string, (Position, Position)>, List<string>) EndGameXML (XmlNode endgame)
+        {
+            if (endgame.Name != "end-game")
+                throw new ArgumentException("Expected end-game tag");
+
+            XmlNode board = endgame.FirstChild;
+            if (board.Name != "board")
+                throw new ArgumentException("Expected board as first tag");
+
+            XmlNode listofcolorsXML = endgame.LastChild;
+            if (listofcolorsXML.Name != "list")
+                throw new ArgumentException("Expected list of color as the second tag");
+
+            List<string> list_of_color = new List<string>();
+            foreach (XmlNode each in listofcolorsXML)
+            {
+                if (each.Name != "color")
+                    throw new ArgumentException("Expected color in list");
+                list_of_color.Add(this.ColorXML(each));
+            }
+            (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions) = this.BoardXML(board);
+            return (TilesTobePlaced, TokenPositions, list_of_color);
+        }
     }
 }
