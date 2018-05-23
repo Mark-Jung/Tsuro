@@ -4,6 +4,9 @@ namespace TsuroTheSecond
 {
     public class MMD
     {
+        // Magic Middle Dude
+        // The relayer, the translator, the caller.
+        // The dude.
         NetworkRelay networkRelay;
         Identifier identifier;
         Wrapper wrapper;
