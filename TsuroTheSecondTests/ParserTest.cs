@@ -499,7 +499,6 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(3, nums[0]);
             Assert.AreEqual(2, nums[1]);
         }
-<<<<<<< HEAD
         [TestMethod]
         public void TestParserSPlayerDragon()
         {

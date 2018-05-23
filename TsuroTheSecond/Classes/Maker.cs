@@ -145,5 +145,39 @@ namespace TsuroTheSecond
             }
             return mapoftiles;
         }
+
+        public XElement PawnLocXML(Position position)
+        {
+            string horv = "";
+            int first_arg, second_arg;
+            List<int> horizontal_ports = new List<int> { 0, 1, 4, 5 };
+            List<int> vertical_ports = new List<int> { 2, 3, 6, 7 };
+            List<int> one_plus = new List<int> { 2, 3, 4, 5 };
+            List<int> one_plusto2 = new List<int> { 1, 4, 6, 3 };
+            if(horizontal_ports.Contains(position.port)) {
+                horv = "h";
+                first_arg = position.y;
+                second_arg = 2 * position.x;
+            } else if (vertical_ports.Contains(position.port)){
+                horv = "v";
+                first_arg = position.x;
+                second_arg = 2 * position.y;
+            } else {
+                throw new ArgumentException("Port number should range from 0 to 7");
+            }
+
+            if(one_plus.Contains(position.port)){
+                first_arg++;
+            }
+            if(one_plusto2.Contains(position.port)){
+                second_arg++;
+            }
+            XElement pawnloc = new XElement("pawn-loc", "");
+            pawnloc.Add(this.HVXML(horv));
+            pawnloc.Add(this.NXML(first_arg));
+            pawnloc.Add(this.NXML(second_arg));
+
+            return pawnloc;
+        }
     }
 }

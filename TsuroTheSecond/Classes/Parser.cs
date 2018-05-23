@@ -271,7 +271,6 @@ namespace TsuroTheSecond
             return (TilesTobePlaced, TokenPositions, this.SetofTilesXML(set_of_tiles), nums);
         }
 
-<<<<<<< HEAD
         public (string, List<Tile>, Boolean) SPlayerXML(XmlNode splayer)
         {
             if(splayer.Name != "splayer-dragon" && splayer.Name != "splayer-nodragon"){

@@ -281,8 +281,27 @@ namespace TsuroTheSecondTests
             List<(int, int)> locs = new List<(int, int)>();
             locs.Add((2, 4));
             Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, maker.TilesXML( locs, tiles)));
+        }
+
+        [TestMethod]
+        public void TestMakerPawnLoc(){
+            // horv
+            string horv = "<h></h>";
+            // n, n
+            string n1 = "<n>3</n>";
+            string n2 = "<n>3</n>";
+            string pawnloc = "<pawn-loc>" + horv + n1 + n2 + "</pawn-loc>";
+            XDocument expected_doc = XDocument.Parse(pawnloc);
+
+            Position position1 = new Position(1, 3, 1, false);
+            Position position2 = new Position(1, 2, 4, false);
+
+            Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, maker.PawnLocXML(position1)));
+            Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, maker.PawnLocXML(position2)));
 
         }
+
+
 
         
 
