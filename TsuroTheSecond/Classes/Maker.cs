@@ -42,9 +42,11 @@ namespace TsuroTheSecond
             if(horv == "h"){
                 XElement hxml = new XElement("h","");
                 return hxml;
-            } else {
+            } else if (horv == "v"){
                 XElement vxml = new XElement("v","");
                 return vxml;
+            } else {
+                throw new ArgumentException("horv can only be either h or v");
             }
         }
 
@@ -66,8 +68,49 @@ namespace TsuroTheSecond
             return xy;
         }
 
-        //public XElement TilesListXML(List<(Tile, int, int)> listoftiles){
-        //    XElement ListofTiles = new XElement("list", "");
-        //}
+        public XElement ColorXML(string color) {
+            if(Constants.colors.Contains(color)){
+                return new XElement("color", color);
+            }
+            throw new ArgumentException("given color needs to be one of the legal colors");
+        }
+
+        public XElement ListofTilesXML(List<Tile> listoftiles){
+            XElement ListofTiles = new XElement("list", "");
+            foreach(Tile each in listoftiles){
+                ListofTiles.Add(this.TileXML(each));
+            }
+            return ListofTiles;
+        }
+
+        public XElement SetofTilesXML(List<Tile> listoftiles)
+        {
+            XElement ListofTiles = new XElement("set", "");
+            foreach (Tile each in listoftiles)
+            {
+                ListofTiles.Add(this.TileXML(each));
+            }
+            return ListofTiles;
+        }
+
+        public XElement DragonSPlayerXML(Player player)
+        {
+            XElement dragonSplayer = new XElement("splayer-dragon", "");
+            XElement color = this.ColorXML(player.Color);
+            XElement setoftiles = this.SetofTilesXML(player.Hand);
+            dragonSplayer.Add(color);
+            dragonSplayer.Add(setoftiles);
+            return dragonSplayer;
+        }
+
+        public XElement SPlayerXML(Player player){
+            XElement dragonSplayer = new XElement("splayer-nodragon", "");
+            XElement color = this.ColorXML(player.Color);
+            XElement setoftiles = this.SetofTilesXML(player.Hand);
+            dragonSplayer.Add(color);
+            dragonSplayer.Add(setoftiles);
+            return dragonSplayer;
+
+        }
     }
 }

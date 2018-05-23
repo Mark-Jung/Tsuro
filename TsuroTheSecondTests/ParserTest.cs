@@ -30,7 +30,7 @@ namespace TsuroTheSecondTests
         //    //}
         //}
         [TestMethod]
-        public void TestParserGetCommand()
+        public void TestParserGetNameCommand()
         {
             XElement get_name = XElement.Parse("<get-name> </get-name>");
             XmlDocument xmlDocument = new XmlDocument();
@@ -38,17 +38,17 @@ namespace TsuroTheSecondTests
             Parser parser = new Parser();
             string command = parser.GetCommand(xmlDocument);
             Assert.AreEqual("get-name", command);
-
         }
 
         [TestMethod]
         public void TestParserInitialize()
         {
-            XElement initialize = XElement.Parse("<initialize> <color> blue </color> <list> <color> red </color> <color> blue </color> <color> green </color> </list> </initialize>");
+            string initialize = "<initialize> <color> blue </color> <list> <color> red </color> <color> blue </color> <color> green </color> </list> </initialize>";
             XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml(initialize.ToString());
+            xmlDocument.LoadXml(initialize);
+            XmlNode newNode = xmlDocument.DocumentElement;
             Parser parser = new Parser();
-            (string own_color, List<string> other_colors) = parser.InitializeXML(xmlDocument);
+            (string own_color, List<string> other_colors) = parser.InitializeXML(newNode);
             Assert.AreEqual("blue", own_color);
             CollectionAssert.AreEqual(new List<string> { "red", "blue", "green" }, other_colors);
         }
@@ -323,7 +323,7 @@ namespace TsuroTheSecondTests
             // (0, 1, 2, 3, 4, 5, 6, 7), id 1
             // (0, 4, 1, 5, 2, 6, 3, 7), id 9
             string tiles = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
-            string setoftile = "<set>" + tiles + "</set>";
+            string setoftile = "<list>" + tiles + "</list>";
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(setoftile);
             XmlNode newNode = doc.DocumentElement;
