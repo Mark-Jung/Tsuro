@@ -375,5 +375,16 @@ namespace TsuroTheSecondTests
 
             Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, maker.BoardXML(board)));
         }
+
+        [TestMethod]
+        public void TestMakerToXmlNode(){
+            XElement xyXelement = maker.XYXML(3, 4);
+            XmlNode newNode = maker.ToXmlNode(xyXelement);
+            Parser parser = new Parser();
+            // need to return two integers: x and y(3, 4)
+            (int x, int y) = parser.XYXML(newNode);
+            Assert.AreEqual(3, x);
+            Assert.AreEqual(4, y);
+        }
     }
 }
