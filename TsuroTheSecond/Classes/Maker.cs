@@ -179,5 +179,38 @@ namespace TsuroTheSecond
 
             return pawnloc;
         }
+
+        public XElement PawnsXML(Dictionary<string, Position> tokenPositions) {
+            XElement pawns = new XElement("map", "");
+            foreach(KeyValuePair<string, Position>entry in tokenPositions){
+                XElement ent = new XElement("ent", "");
+                ent.Add(this.ColorXML(entry.Key));
+                ent.Add(this.PawnLocXML(entry.Value));
+                pawns.Add(ent);
+            }
+            return pawns;
+        }
+
+        public XElement BoardXML(Board board)
+        {
+            XElement boardxml = new XElement("board", "");
+            List < (int, int) > loc = new List<(int, int)>();
+            List<Tile> placed_tiles = new List<Tile>();
+            for (int i = 0; i < 6; i++){
+                for (int j = 0; j < 6; j++){
+                    if(board.tiles[i][j] is null){
+                        continue;
+                    } else{
+                        loc.Add((i, j));
+                        placed_tiles.Add(board.tiles[i][j]);
+                    }
+                }
+            }
+            XElement tilesxml = this.TilesXML(loc, placed_tiles);
+            XElement pawnsxml = this.PawnsXML(board.tokenPositions);
+            boardxml.Add(tilesxml);
+            boardxml.Add(pawnsxml);
+            return boardxml;
+        }
     }
 }

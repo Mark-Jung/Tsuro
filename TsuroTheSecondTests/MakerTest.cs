@@ -301,10 +301,79 @@ namespace TsuroTheSecondTests
 
         }
 
+        [TestMethod]
+        public void TestMakerPawns() {
+            // color
+            string color = "<color>red</color>";
+            string blue = "<color>blue</color>";
+            // horv
+            string horv = "<h></h>";
+            // n, n
+            string n1 = "<n>3</n>";
+            string n2 = "<n>3</n>";
+            string pawnloc = "<pawn-loc>" + horv + n1 + n2 + "</pawn-loc>";
+            string ent = "<ent>" + color + pawnloc + "</ent>";
+            string ent1 = "<ent>" + blue + pawnloc + "</ent>";
+            string pawns = "<map>" + ent + ent1 + "</map>";
 
+            Position position1 = new Position(1, 3, 1, false);
+            Position position2 = new Position(1, 2, 4, false);
 
-        
+            Dictionary<string, Position> tokenPositions = new Dictionary<string, Position>();
+            tokenPositions["red"] = position1;
+            tokenPositions["blue"] = position2;
 
+            XDocument expected_doc = XDocument.Parse(pawns);
+            Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, maker.PawnsXML(tokenPositions)));
+        }
 
+        [TestMethod]
+        public void TestMakerBoard() {
+            // pawns setup
+            // color
+            string color = "<color>red</color>";
+            string blue = "<color>blue</color>";
+            // horv
+            string horv = "<h></h>";
+            // n, n
+            string n1 = "<n>3</n>";
+            string n2 = "<n>3</n>";
+            string pawnloc = "<pawn-loc>" + horv + n1 + n2 + "</pawn-loc>";
+            string ent = "<ent>" + color + pawnloc + "</ent>";
+            string ent1 = "<ent>" + blue + pawnloc + "</ent>";
+            string pawns = "<map>" + ent + ent1 + "</map>";
+
+            Position position1 = new Position(1, 3, 1, false);
+            Position position2 = new Position(1, 2, 4, false);
+
+            //tiles setup
+            // xy
+            string xy = "<xy><x>2</x><y>4</y></xy>";
+            // tile
+            string xmlconnect1 = "<connect><n>1</n><n>2</n></connect>";
+            string xmlconnect2 = "<connect><n>3</n><n>4</n></connect>";
+            string xmlconnect3 = "<connect><n>5</n><n>6</n></connect>";
+            string xmlconnect4 = "<connect><n>0</n><n>7</n></connect>";
+            string xmltile = "<tile>";
+            xmltile += xmlconnect1;
+            xmltile += xmlconnect2;
+            xmltile += xmlconnect3;
+            xmltile += xmlconnect4;
+            xmltile += "</tile>";
+            // tiles
+            string xmltiles = "<map><ent>" + xy + xmltile + "</ent></map>";
+
+            string board_str = "<board>" + xmltiles + pawns + "</board>";
+
+            Board board = new Board(6);
+            Tile tile1 = new Tile(1, new List<int> { 1, 2, 3, 4, 5, 6, 0, 7 });
+            board.PlaceTile(tile1, 2, 4);
+            board.AddPlayerToken("red", position1);
+            board.AddPlayerToken("blue", position2);
+
+            XDocument expected_doc = XDocument.Parse(board_str);
+
+            Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, maker.BoardXML(board)));
+        }
     }
 }
