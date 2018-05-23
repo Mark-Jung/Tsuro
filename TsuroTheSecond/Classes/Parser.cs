@@ -271,6 +271,7 @@ namespace TsuroTheSecond
             return (TilesTobePlaced, TokenPositions, this.SetofTilesXML(set_of_tiles), nums);
         }
 
+<<<<<<< HEAD
         public (string, List<Tile>, Boolean) SPlayerXML(XmlNode splayer)
         {
             if(splayer.Name != "splayer-dragon" && splayer.Name != "splayer-nodragon"){
@@ -283,15 +284,40 @@ namespace TsuroTheSecond
 
         public Dictionary<string, (List<Tile>, Boolean)> ListSPlayerXML(XmlNode listofsplayer)
         {
-            if(listofsplayer.Name != "list"){
+            if (listofsplayer.Name != "list")
+            {
                 throw new ArgumentException("Expected list tag for the list of splayer");
             }
             Dictionary<string, (List<Tile>, Boolean)> result = new Dictionary<string, (List<Tile>, bool)>();
-            foreach( XmlNode splayer in listofsplayer.ChildNodes){
+            foreach (XmlNode splayer in listofsplayer.ChildNodes)
+            {
                 (string color, List<Tile> hand, Boolean isdragon) = this.SPlayerXML(splayer);
                 result.Add(color, (hand, isdragon));
             }
             return result;
+        }
+        public (Dictionary<(int, int), Tile>, Dictionary<string, (Position, Position)>, List<string>) EndGameXML (XmlNode endgame)
+        {
+            if (endgame.Name != "end-game")
+                throw new ArgumentException("Expected end-game tag");
+
+            XmlNode board = endgame.FirstChild;
+            if (board.Name != "board")
+                throw new ArgumentException("Expected board as first tag");
+
+            XmlNode listofcolorsXML = endgame.LastChild;
+            if (listofcolorsXML.Name != "list")
+                throw new ArgumentException("Expected list of color as the second tag");
+
+            List<string> list_of_color = new List<string>();
+            foreach (XmlNode each in listofcolorsXML)
+            {
+                if (each.Name != "color")
+                    throw new ArgumentException("Expected color in list");
+                list_of_color.Add(this.ColorXML(each));
+            }
+            (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions) = this.BoardXML(board);
+            return (TilesTobePlaced, TokenPositions, list_of_color);
         }
     }
 }
