@@ -188,16 +188,16 @@ namespace TsuroTheSecondTests
         public void TestMakerSplayerNotinDragonQueue()
         {
             //expected
-            string DragonSPlayer = "<splayer-nodragon>";
+            string SPlayer = "<splayer-nodragon>";
             string colorxml = "<color>blue</color>";
-            DragonSPlayer += colorxml;
+            SPlayer += colorxml;
             // (0, 1, 2, 3, 4, 5, 6, 7), id 1
             // (0, 4, 1, 5, 2, 6, 3, 7), id 9
             string tiles = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
             string setoftiles = "<set>" + tiles + "</set>";
-            DragonSPlayer += setoftiles;
-            DragonSPlayer += "</splayer-nodragon>";
-            XDocument expected_doc = XDocument.Parse(DragonSPlayer);
+            SPlayer += setoftiles;
+            SPlayer += "</splayer-nodragon>";
+            XDocument expected_doc = XDocument.Parse(SPlayer);
 
             RandomPlayer jim = new RandomPlayer("jim");
             Player randBlue = new Player(jim, "blue");
@@ -206,6 +206,49 @@ namespace TsuroTheSecondTests
 
             Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, maker.SPlayerXML(randBlue)));
         }
+
+        [TestMethod]
+        public void TestMakerListofSplayer()
+        {
+            string SPlayer = "<splayer-nodragon>";
+            string colorxml = "<color>blue</color>";
+            SPlayer += colorxml;
+            // (0, 1, 2, 3, 4, 5, 6, 7), id 1
+            // (0, 4, 1, 5, 2, 6, 3, 7), id 9
+            string tiles = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
+            string setoftiles = "<set>" + tiles + "</set>";
+            SPlayer += setoftiles;
+            SPlayer += "</splayer-nodragon>";
+
+            string DragonSPlayer = "<splayer-dragon>";
+            string dragcolorxml = "<color>red</color>";
+            DragonSPlayer += dragcolorxml;
+            // (0, 1, 2, 3, 4, 5, 6, 7), id 1
+            // (0, 4, 1, 5, 2, 6, 3, 7), id 9
+            string dragtiles = "<tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect></tile>";
+            string dragsetoftiles = "<set>" + dragtiles + "</set>";
+            DragonSPlayer += dragsetoftiles;
+            DragonSPlayer += "</splayer-dragon>";
+
+            string ListofSPlayer = "<list>" + SPlayer + DragonSPlayer + "</list>";
+            XDocument expected_doc = XDocument.Parse(ListofSPlayer);
+
+            // make list of splayers
+            RandomPlayer jim = new RandomPlayer("jim");
+            Player randBlue = new Player(jim, "blue");
+            randBlue.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+            randBlue.AddTiletoHand(new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 }));
+            RandomPlayer bob = new RandomPlayer("bob");
+            Player randred = new Player(jim, "red");
+            randred.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+            randred.AddTiletoHand(new Tile(9, new List<int> { 0, 4, 1, 5, 2, 6, 3, 7 }));
+
+            List<(Player, Boolean)> listofSPlayer = new List<(Player, Boolean)> { (randBlue, false), (randred, true)};
+
+
+            Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, maker.ListofSPlayersXML(listofSPlayer)));
+        }
+
 
         
 

@@ -110,7 +110,18 @@ namespace TsuroTheSecond
             dragonSplayer.Add(color);
             dragonSplayer.Add(setoftiles);
             return dragonSplayer;
+        }
 
+        public XElement ListofSPlayersXML(List<(Player, Boolean)> players){
+            XElement Splayers = new XElement("list", "");
+            foreach((Player each, Boolean IsDrag) in players){
+                if(IsDrag){
+                    Splayers.Add(this.DragonSPlayerXML(each));
+                } else {
+                    Splayers.Add(this.SPlayerXML(each));
+                }
+            }
+            return Splayers;
         }
     }
 }
