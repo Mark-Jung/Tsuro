@@ -85,8 +85,8 @@ namespace TsuroTheSecond
             //    tournament.Play(i);
             //    Console.WriteLine("Ending the tournament with {0}players!", i);
             //}
-            Tournament tournament = new Tournament();
-            tournament.Play(3);
+            //Tournament tournament = new Tournament();
+            //tournament.Play(3);
 
         }
     }
