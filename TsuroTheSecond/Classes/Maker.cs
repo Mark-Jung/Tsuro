@@ -145,5 +145,72 @@ namespace TsuroTheSecond
             }
             return mapoftiles;
         }
+
+        public XElement PawnLocXML(Position position)
+        {
+            string horv = "";
+            int first_arg, second_arg;
+            List<int> horizontal_ports = new List<int> { 0, 1, 4, 5 };
+            List<int> vertical_ports = new List<int> { 2, 3, 6, 7 };
+            List<int> one_plus = new List<int> { 2, 3, 4, 5 };
+            List<int> one_plusto2 = new List<int> { 1, 4, 6, 3 };
+            if(horizontal_ports.Contains(position.port)) {
+                horv = "h";
+                first_arg = position.y;
+                second_arg = 2 * position.x;
+            } else if (vertical_ports.Contains(position.port)){
+                horv = "v";
+                first_arg = position.x;
+                second_arg = 2 * position.y;
+            } else {
+                throw new ArgumentException("Port number should range from 0 to 7");
+            }
+
+            if(one_plus.Contains(position.port)){
+                first_arg++;
+            }
+            if(one_plusto2.Contains(position.port)){
+                second_arg++;
+            }
+            XElement pawnloc = new XElement("pawn-loc", "");
+            pawnloc.Add(this.HVXML(horv));
+            pawnloc.Add(this.NXML(first_arg));
+            pawnloc.Add(this.NXML(second_arg));
+
+            return pawnloc;
+        }
+
+        public XElement PawnsXML(Dictionary<string, Position> tokenPositions) {
+            XElement pawns = new XElement("map", "");
+            foreach(KeyValuePair<string, Position>entry in tokenPositions){
+                XElement ent = new XElement("ent", "");
+                ent.Add(this.ColorXML(entry.Key));
+                ent.Add(this.PawnLocXML(entry.Value));
+                pawns.Add(ent);
+            }
+            return pawns;
+        }
+
+        public XElement BoardXML(Board board)
+        {
+            XElement boardxml = new XElement("board", "");
+            List < (int, int) > loc = new List<(int, int)>();
+            List<Tile> placed_tiles = new List<Tile>();
+            for (int i = 0; i < 6; i++){
+                for (int j = 0; j < 6; j++){
+                    if(board.tiles[i][j] is null){
+                        continue;
+                    } else{
+                        loc.Add((i, j));
+                        placed_tiles.Add(board.tiles[i][j]);
+                    }
+                }
+            }
+            XElement tilesxml = this.TilesXML(loc, placed_tiles);
+            XElement pawnsxml = this.PawnsXML(board.tokenPositions);
+            boardxml.Add(tilesxml);
+            boardxml.Add(pawnsxml);
+            return boardxml;
+        }
     }
 }
