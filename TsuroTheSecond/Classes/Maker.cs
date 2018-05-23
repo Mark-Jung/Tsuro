@@ -123,5 +123,27 @@ namespace TsuroTheSecond
             }
             return Splayers;
         }
+
+        public XElement FalseXML(){
+            return new XElement("false", "");
+        }
+
+        public XElement TilesXML(List<(int, int)> locs, List<Tile> tiles)
+        {
+            XElement mapoftiles = new XElement("map", "");
+            if(locs.Count != tiles.Count){
+                throw new ArgumentException("Expected the two input lists to be the same length");
+            }
+            for (int i = 0; i < locs.Count; i++){
+                (int x, int y) = locs[i];
+                XElement xyxml = this.XYXML(x, y);
+                XElement tilexml = this.TileXML(tiles[i]);
+                XElement ent = new XElement("ent", "");
+                ent.Add(xyxml);
+                ent.Add(tilexml);
+                mapoftiles.Add(ent);
+            }
+            return mapoftiles;
+        }
     }
 }
