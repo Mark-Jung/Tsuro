@@ -12,9 +12,9 @@ namespace TsuroTheSecond
         {
 
         }
-        public string GetCommand(XmlDocument input)
+        public string GetCommand(XmlNode input)
         {
-            string command = input.FirstChild.Name;
+            string command = input.Name;
             // string and object in internal game structure
             return command;
         }

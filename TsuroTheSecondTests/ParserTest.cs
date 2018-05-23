@@ -35,8 +35,9 @@ namespace TsuroTheSecondTests
             XElement get_name = XElement.Parse("<get-name> </get-name>");
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(get_name.ToString());
+            XmlNode newNode = xmlDocument.DocumentElement;
             Parser parser = new Parser();
-            string command = parser.GetCommand(xmlDocument);
+            string command = parser.GetCommand(newNode);
             Assert.AreEqual("get-name", command);
         }
 
