@@ -42,9 +42,11 @@ namespace TsuroTheSecond
             if(horv == "h"){
                 XElement hxml = new XElement("h","");
                 return hxml;
-            } else {
+            } else if (horv == "v"){
                 XElement vxml = new XElement("v","");
                 return vxml;
+            } else {
+                throw new ArgumentException("horv can only be either h or v");
             }
         }
 
@@ -66,8 +68,82 @@ namespace TsuroTheSecond
             return xy;
         }
 
-        //public XElement TilesListXML(List<(Tile, int, int)> listoftiles){
-        //    XElement ListofTiles = new XElement("list", "");
-        //}
+        public XElement ColorXML(string color) {
+            if(Constants.colors.Contains(color)){
+                return new XElement("color", color);
+            }
+            throw new ArgumentException("given color needs to be one of the legal colors");
+        }
+
+        public XElement ListofTilesXML(List<Tile> listoftiles){
+            XElement ListofTiles = new XElement("list", "");
+            foreach(Tile each in listoftiles){
+                ListofTiles.Add(this.TileXML(each));
+            }
+            return ListofTiles;
+        }
+
+        public XElement SetofTilesXML(List<Tile> listoftiles)
+        {
+            XElement ListofTiles = new XElement("set", "");
+            foreach (Tile each in listoftiles)
+            {
+                ListofTiles.Add(this.TileXML(each));
+            }
+            return ListofTiles;
+        }
+
+        public XElement DragonSPlayerXML(Player player)
+        {
+            XElement dragonSplayer = new XElement("splayer-dragon", "");
+            XElement color = this.ColorXML(player.Color);
+            XElement setoftiles = this.SetofTilesXML(player.Hand);
+            dragonSplayer.Add(color);
+            dragonSplayer.Add(setoftiles);
+            return dragonSplayer;
+        }
+
+        public XElement SPlayerXML(Player player){
+            XElement dragonSplayer = new XElement("splayer-nodragon", "");
+            XElement color = this.ColorXML(player.Color);
+            XElement setoftiles = this.SetofTilesXML(player.Hand);
+            dragonSplayer.Add(color);
+            dragonSplayer.Add(setoftiles);
+            return dragonSplayer;
+        }
+
+        public XElement ListofSPlayersXML(List<(Player, Boolean)> players){
+            XElement Splayers = new XElement("list", "");
+            foreach((Player each, Boolean IsDrag) in players){
+                if(IsDrag){
+                    Splayers.Add(this.DragonSPlayerXML(each));
+                } else {
+                    Splayers.Add(this.SPlayerXML(each));
+                }
+            }
+            return Splayers;
+        }
+
+        public XElement FalseXML(){
+            return new XElement("false", "");
+        }
+
+        public XElement TilesXML(List<(int, int)> locs, List<Tile> tiles)
+        {
+            XElement mapoftiles = new XElement("map", "");
+            if(locs.Count != tiles.Count){
+                throw new ArgumentException("Expected the two input lists to be the same length");
+            }
+            for (int i = 0; i < locs.Count; i++){
+                (int x, int y) = locs[i];
+                XElement xyxml = this.XYXML(x, y);
+                XElement tilexml = this.TileXML(tiles[i]);
+                XElement ent = new XElement("ent", "");
+                ent.Add(xyxml);
+                ent.Add(tilexml);
+                mapoftiles.Add(ent);
+            }
+            return mapoftiles;
+        }
     }
 }

@@ -95,8 +95,7 @@ namespace TsuroTheSecond
                 try
                 {
                     position = p.iplayer.PlacePawn(this.board);
-                }
-                catch (ArgumentException)
+                }catch (ArgumentException)
                 {
                     Console.WriteLine("Player initialized invalid position and has been replaced");
                     ReplacePlayer(p);
