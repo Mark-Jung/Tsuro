@@ -26,22 +26,5 @@ namespace TsuroTheSecond
             return newNode;
         }
 
-        public Boolean TryXML (string s)
-        {
-            //int i = 0;
-            //string line = "";
-            //while (i < s.Length && s[i] != '\n')
-            //{
-            //    if (s[i] != ' ')
-            //        line += s[i];
-            //    i++;
-            //}
-
-            //XmlDocument xmlDocument = new XmlDocument();
-            //xmlDocument.LoadXml(line.ToString());
-            //XmlNode newNode = xmlDocument.DocumentElement;
-            return true;
-        }
-
     }
 }
