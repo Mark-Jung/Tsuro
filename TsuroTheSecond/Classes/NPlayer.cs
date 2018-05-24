@@ -25,13 +25,13 @@ namespace TsuroTheSecond
                 case "get-name":
                     return wrapper.GetName(player);
                 case "initialize":
-                    return wrapper.Initialize(player);
+                    return wrapper.Initialize(player, node);
                 case "place-pawn":
-                    return wrapper.PlacePawn(player);
-                case "play-turn":
-                    return wrapper.PlayTurn(player);
-                case "end-game":
-                    return wrapper.EndGame(player);
+                    return wrapper.PlacePawn(player, node);
+                //case "play-turn":
+                //    return wrapper.PlayTurn(player, node);
+                //case "end-game":
+                    //return wrapper.EndGame(player, node);
 
                 default:
                     throw new ArgumentException("Invalid Command Received");

@@ -40,40 +40,6 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
-        public void TestMakerPawnLocH()
-        {
-            // expected
-            string xmlContent = "<pawn-loc>" +
-                "<h></h>" +
-                "<n>3</n>" +
-                "<n>4</n>" +
-                "</pawn-loc>";
-
-            XDocument expected_doc = XDocument.Parse(xmlContent);
-
-            // testing
-            XElement ToPawnLocH = maker.PawnLocXML("h", 3, 4);
-            Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, ToPawnLocH));
-        }
-
-        [TestMethod]
-        public void TestMakerPawnLocV()
-        {
-            // expected
-            string xmlContent = "<pawn-loc>" +
-                "<v></v>" +
-                "<n>3</n>" +
-                "<n>4</n>" +
-                "</pawn-loc>";
-
-            XDocument expected_doc = XDocument.Parse(xmlContent);
-
-            // testing
-            XElement ToPawnLocV = maker.PawnLocXML("v", 3, 4);
-            Assert.IsTrue(XNode.DeepEquals(expected_doc.FirstNode, ToPawnLocV));
-        }
-
-        [TestMethod]
         public void TestMakerConnect()
         {
             // expected

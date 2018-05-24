@@ -9,8 +9,8 @@ namespace TsuroTheSecond
         // "board describes where tiles are, what orientation they're in, 
         // where each pawn is, and what color it is" - hw5
         public readonly List<List<Tile>> tiles;
-        public readonly Dictionary<string, Position> tokenPositions;
-        public readonly Dictionary<string, Position> initialPositions;
+        public Dictionary<string, Position> tokenPositions;
+        public Dictionary<string, Position> initialPositions;
 
         public Board(int size)
         {

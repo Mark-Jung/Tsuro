@@ -51,15 +51,6 @@ namespace TsuroTheSecond
             }
         }
 
-        public XElement PawnLocXML(string horv, int x, int y) {
-            XElement horvxml = this.HVXML(horv);
-            XElement xxml = this.NXML(x);
-            XElement yxml = this.NXML(y);
-
-            XElement pawnlocxml = new XElement("pawn-loc", horvxml, xxml, yxml);
-            return pawnlocxml; 
-        }
-
         //public XElement MaybeListofSplayersXML(){
             
         //}
@@ -213,15 +204,12 @@ namespace TsuroTheSecond
             boardxml.Add(pawnsxml);
             return boardxml;
         }
-        /*
-         * XElement xE = XElement.Parse("<Outer><Inner><Data /></Inner></Outer>");
 
-    XmlDocument xD = new XmlDocument();
-    xD.LoadXml(xE.ToString());
-    XmlNode xN = xD.FirstChild;
+        public XElement VoidXML()
+        {
+            return new XElement("void", "");
+        }
 
-    XElement xE2 = XElement.Parse(xN.OuterXml); 
-         */
         public XmlNode ToXmlNode(XElement input){
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(input.ToString());
