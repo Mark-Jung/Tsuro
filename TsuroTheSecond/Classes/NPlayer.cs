@@ -5,27 +5,33 @@ namespace TsuroTheSecond
 {
     public class NPlayer
     {
+        Player player;
+        Parser parser = new Parser();
+        Wrapper wrapper = new Wrapper();
         public NPlayer()
         {
-            
+
         }
 
-        public object ReceiveCommand(XmlDocument xmlDocument)
+        public XmlNode Identifier(XmlNode node)
         {
-            Parser parser = new Parser();
-            string command = parser.GetCommand(xmlDocument);
+            /*
+             * Accepts 
+             */
+
+            string command = parser.GetCommand(node);
             switch (command)
             {
                 case "get-name":
-                    return command;
+                    return wrapper.GetName(player);
                 case "initialize":
-                    return parser.InitializeXML(xmlDocument);
+                    return wrapper.Initialize(player);
                 case "place-pawn":
-                    return parser.PlacePawnXML(xmlDocument);
+                    return wrapper.PlacePawn(player);
                 case "play-turn":
-                    return parser.PlayTurnXML(xmlDocument);
+                    return wrapper.PlayTurn(player);
                 case "end-game":
-                    return parser.EndGameXML(xmlDocument);
+                    return wrapper.EndGame(player);
                 default:
                     throw new ArgumentException("Invalid Command Received");
             }

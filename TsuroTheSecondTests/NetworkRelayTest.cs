@@ -11,10 +11,11 @@ namespace TsuroTheSecondTests
     [TestClass]
     public class NetworkRelayTest
     {
+        NetworkRelay nr = new NetworkRelay();
+
         [TestMethod]
         public void TestNetworkRelayReceive()
         {
-            NetworkRelay nr = new NetworkRelay();
             string s1 = "<get-name> </get-name> \n <initialize> <color> blue </color> <list> <color> red </color> <color> blue </color> <color> green </color> </list> </initialize>";
             XmlNode result1 = nr.Receiver(s1);
             Assert.AreEqual(result1.Name, "get-name");
@@ -24,6 +25,14 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(result2.Name, "initialize");
             Assert.AreEqual(result2.FirstChild.Name, "color");
             Assert.AreEqual(result2.FirstChild.InnerText, "blue");
+
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Invalid XML")]
+        public void TestNetworkRelayReceiveInvalid()
+        {
+            string s = "invalid";
+            nr.Receiver(s);
         }
     }
 }

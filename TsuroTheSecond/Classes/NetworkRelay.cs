@@ -10,7 +10,7 @@ namespace TsuroTheSecond
         {
         }
 
-        public XmlNode Receiver (string s)
+        public XmlNode Receiver(string s)
         {
             int i = 0;
             string line = "";
@@ -21,10 +21,19 @@ namespace TsuroTheSecond
                 i++;
             }
             XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml(line.ToString());
+            try
+            {
+                xmlDocument.LoadXml(line.ToString());
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException("Invalid XML");
+            }
             XmlNode newNode = xmlDocument.DocumentElement;
             return newNode;
         }
+
+
 
     }
 }
