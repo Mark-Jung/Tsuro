@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using System.Xml;
 using System.Collections.Generic;
 namespace TsuroTheSecond
 {
@@ -211,6 +212,21 @@ namespace TsuroTheSecond
             boardxml.Add(tilesxml);
             boardxml.Add(pawnsxml);
             return boardxml;
+        }
+        /*
+         * XElement xE = XElement.Parse("<Outer><Inner><Data /></Inner></Outer>");
+
+    XmlDocument xD = new XmlDocument();
+    xD.LoadXml(xE.ToString());
+    XmlNode xN = xD.FirstChild;
+
+    XElement xE2 = XElement.Parse(xN.OuterXml); 
+         */
+        public XmlNode ToXmlNode(XElement input){
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(input.ToString());
+            XmlNode xmlNode = xmlDocument.FirstChild;
+            return xmlNode;
         }
     }
 }

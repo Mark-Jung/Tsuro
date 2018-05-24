@@ -1,13 +1,23 @@
 ﻿using System;
 using TsuroTheSecond;
+using System.Xml;
+using System.Xml.Linq;
+
 namespace TsuroTheSecond
 {
     public class Wrapper
     {
-        Server server;
-        public Wrapper(Server _server)
+        Maker maker = new Maker();
+        public Wrapper()
         {
-            this.server = _server;
         }
+
+        public XmlNode GetName(Player player){
+            string name = player.iplayer.GetName();
+            XElement nameXelement = maker.PlayerNameXML(name);
+            return maker.ToXmlNode(nameXelement);
+        }
+
+
     }
 }

@@ -32,6 +32,7 @@ namespace TsuroTheSecond
                     return wrapper.PlayTurn(player);
                 case "end-game":
                     return wrapper.EndGame(player);
+
                 default:
                     throw new ArgumentException("Invalid Command Received");
             }
