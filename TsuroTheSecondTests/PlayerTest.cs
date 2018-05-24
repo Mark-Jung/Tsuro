@@ -467,7 +467,8 @@ namespace TsuroTheSecondTests
             server.board.PlaceTile(testTile5, 1, 0);
             server.board.PlaceTile(testTile6, 0, 1);
 
-            server.gameState = Server.State.safe;
+            server.gameState = Server.State.loop;
+            mPlayer.playerState = LeastSymmetricPlayer.State.loop;
             Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
 
             Assert.IsTrue(testTile4.CompareByPath(tobePlayed));
@@ -500,6 +501,7 @@ namespace TsuroTheSecondTests
             player.AddTiletoHand(testTile4);
 
             server.gameState = Server.State.safe;
+            mPlayer.playerState = LeastSymmetricPlayer.State.loop;
             Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
             Assert.AreEqual(1, server.alive.Count);
          
@@ -546,6 +548,7 @@ namespace TsuroTheSecondTests
             player.AddTiletoHand(testTile5);
 
             server.gameState = Server.State.safe;
+            mPlayer.playerState = LeastSymmetricPlayer.State.loop;
             Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 32);
 
             Assert.IsTrue(testTile4.CompareByPath(tobePlayed));
@@ -591,6 +594,7 @@ namespace TsuroTheSecondTests
             player.AddTiletoHand(testTile5);
 
             server.gameState = Server.State.safe;
+            mPlayer.playerState = LeastSymmetricPlayer.State.loop;
             Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 32);
 
             // same symmetricity, both 4 and 5 legal. But 4 was added to  hand first so it should be 4
@@ -637,6 +641,7 @@ namespace TsuroTheSecondTests
             player.AddTiletoHand(testTile4);
 
             server.gameState = Server.State.safe;
+            mPlayer.playerState = LeastSymmetricPlayer.State.loop;
             Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 32);
 
             // same symmetricity, both 4 and 5 legal. But 4 was added to  hand first so it should be 4
@@ -690,6 +695,7 @@ namespace TsuroTheSecondTests
             server.board.PlaceTile(testTile6, 0, 1);
 
             server.gameState = Server.State.safe;
+            mPlayer.playerState = MostSymmetricPlayer.State.loop;
             Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
 
             Assert.IsTrue(testTile1.CompareByPath(tobePlayed));
@@ -723,6 +729,7 @@ namespace TsuroTheSecondTests
             player.AddTiletoHand(testTile4);
 
             server.gameState = Server.State.safe;
+            mPlayer.playerState = MostSymmetricPlayer.State.loop;
             Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
             Assert.AreEqual(1, server.alive.Count);
 
@@ -771,6 +778,7 @@ namespace TsuroTheSecondTests
 
 
             server.gameState = Server.State.safe;
+            mPlayer.playerState = MostSymmetricPlayer.State.loop;
             Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
             Assert.AreEqual(1, server.alive.Count);
 
@@ -808,6 +816,7 @@ namespace TsuroTheSecondTests
             });
             player.AddTiletoHand(testTile5);
             server.gameState = Server.State.safe;
+            mPlayer.playerState = MostSymmetricPlayer.State.loop;
             Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
 
             Assert.IsTrue(testTile4.CompareByPath(tobePlayed));
@@ -843,6 +852,8 @@ namespace TsuroTheSecondTests
             player.AddTiletoHand(testTile4);
 
             server.gameState = Server.State.safe;
+            mPlayer.playerState = MostSymmetricPlayer.State.loop;
+
             Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
             Assert.IsTrue(testTile5.CompareByPath(tobePlayed));
         }

@@ -5,7 +5,7 @@ namespace TsuroTheSecond
     public class MPlayer
     {
         protected string name;
-        protected string color;
+        string color;
         protected List<string> player_colors;
         protected enum State { start, initialized, loop, end };
         protected State playerState;
@@ -19,6 +19,16 @@ namespace TsuroTheSecond
         public String GetName()
         {
             return name;
+        }
+
+        public String GetColor()
+        {
+            return color;
+        }
+
+        public List<string> GetOtherColors()
+        {
+            return player_colors;
         }
 
         public void Initialize(string _color, List<string> all_colors)
@@ -65,7 +75,6 @@ namespace TsuroTheSecond
             if(board.IsDead(this.color)){
                 Console.WriteLine("You Win!!");
             }
-
             //if (colors.Contains(color))
             //{
             //    Console.WriteLine("You win!");

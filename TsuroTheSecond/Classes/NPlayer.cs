@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Xml;
+using System.Collections.Generic;
 
 namespace TsuroTheSecond
 {
     public class NPlayer
     {
-        Player player;
-        Parser parser = new Parser();
-        Wrapper wrapper = new Wrapper();
-        public NPlayer()
-        {
+        public Parser parser = new Parser();
+        public Wrapper wrapper = new Wrapper();
+        public Player player;
 
+        public NPlayer(IPlayer _player, string c)
+        {
+            this.player = new Player(_player, c);
         }
 
         public XmlNode Identifier(XmlNode node)
@@ -23,13 +25,13 @@ namespace TsuroTheSecond
             switch (command)
             {
                 case "get-name":
-                    return wrapper.GetName(player);
+                    return wrapper.GetName(this.player);
                 case "initialize":
-                    return wrapper.Initialize(player, node);
+                    return wrapper.Initialize(this.player, node);
                 case "place-pawn":
-                    return wrapper.PlacePawn(player, node);
+                    return wrapper.PlacePawn(this.player, node);
                 //case "play-turn":
-                //    return wrapper.PlayTurn(player, node);
+                    //return wrapper.PlayTurn(this.player, node);
                 //case "end-game":
                     //return wrapper.EndGame(player, node);
 

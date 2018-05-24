@@ -69,7 +69,9 @@ namespace TsuroTheSecond
         }
 
         public Boolean IsDead(string color) {
-            if (initialPositions[color] == tokenPositions[color]) return false;
+            if(initialPositions.Count > 0) {
+                if (initialPositions[color] == tokenPositions[color]) return false;
+            }
             return ((tokenPositions[color].x < 0) ||
                     (tokenPositions[color].x > 5) ||
                     (tokenPositions[color].y < 0) ||

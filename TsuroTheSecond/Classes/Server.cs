@@ -67,10 +67,16 @@ namespace TsuroTheSecond
             }
 
             List<string> colorCopy = new List<string>();
-            foreach (string color in Constants.colors) {
-                if (color != player.Color) {
-                    colorCopy.Add(color);
-                }
+            //foreach (string color in Constants.colors) {
+            //    if (color != player.Color) {
+            //        colorCopy.Add(color);
+            //    }
+            //}
+            foreach(Player each in alive){
+                colorCopy.Add(each.Color);
+            }
+            foreach(Player each in dead){
+                colorCopy.Add(each.Color);
             }
 
             replacement.Initialize(player.Color, colorCopy);
