@@ -10,6 +10,8 @@ namespace TsuroTheSecond
         public Wrapper wrapper = new Wrapper();
         public Player player;
 
+        // need to fix  Player  to IPlayer. NPlayer should implement IPlayer.
+
         public NPlayer(IPlayer _player, string c)
         {
             this.player = new Player(_player, c);
