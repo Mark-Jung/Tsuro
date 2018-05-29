@@ -19,9 +19,9 @@ namespace TsuroTheSecondTests
         LeastSymmetricPlayer leastSymmetricPlayer;
         MostSymmetricPlayer mostSymmetricPlayer;
         List<Tile> tiles = new List<Tile>();
-        Player randBlue;
-        Player mostsymRed;
-        Player leastsymRed;
+        PlayerProxy randBlue;
+        PlayerProxy mostsymRed;
+        PlayerProxy leastsymRed;
 
         [TestInitialize]
         public void Initialize()
@@ -31,9 +31,9 @@ namespace TsuroTheSecondTests
             leastSymmetricPlayer= new LeastSymmetricPlayer("reggie");
             mostSymmetricPlayer= new MostSymmetricPlayer("michael");
 
-            randBlue = new Player(randomPlayer, "blue");
-            mostsymRed = new Player(mostSymmetricPlayer, "red");
-            leastsymRed = new Player(leastSymmetricPlayer, "red");
+            randBlue = new PlayerProxy(randomPlayer, "blue");
+            mostsymRed = new PlayerProxy(mostSymmetricPlayer, "red");
+            leastsymRed = new PlayerProxy(leastSymmetricPlayer, "red");
 
 
             tiles = new List<Tile>{

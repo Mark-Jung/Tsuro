@@ -28,8 +28,8 @@ namespace TsuroTheSecond
             /*              * Accepts               */
 
             string command = parser.GetCommand(node);             switch (command)             {                 case "get-name":                     return wrapper.GetName(this);                 case "initialize":                     return wrapper.Initialize(this, node);                 case "place-pawn":                     return wrapper.PlacePawn(this, node);
-                //case "play-turn":
-                //return wrapper.PlayTurn(this.player, node);
+                case "play-turn":
+                    return wrapper.PlayTurn(this, node);
                 //case "end-game":
                 //return wrapper.EndGame(player, node);
 
