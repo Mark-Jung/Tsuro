@@ -24,7 +24,6 @@ namespace TsuroTheSecondTests
         Player randBlue;
         Player mostsymRed;
         Player leastsymRed;
-        NPlayer nPlayer;
 
         [TestInitialize]
         public void Initialize()

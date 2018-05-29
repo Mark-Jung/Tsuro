@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
+using System.Net;
+using System.Net.Sockets;
 
 namespace TsuroTheSecond
 {
@@ -13,7 +15,7 @@ namespace TsuroTheSecond
         public List<Tile> Hand;
         public IPlayer iplayer;
 
-        public PlayerProxy(IPlayer p, string c)
+        public PlayerProxy(IPlayer p, string c, IPAddress address)
         {
             if (!Constants.colors.Contains(c))
             {
@@ -83,6 +85,10 @@ namespace TsuroTheSecond
             this.iplayer = player;
         }
 
+        public void Play()
+        {
+            
+        }
 
     }
 }

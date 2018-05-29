@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.IO;
 
 
 namespace TsuroTheSecond
 {
     public class Tournament
     {
+        static TcpListener tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 9999);
         public Tournament()
         {
         }
@@ -18,11 +17,12 @@ namespace TsuroTheSecond
         public void Play(){
             // make server
             Server server = new Server();
-
-            IPEndPoint ip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9999);
-
+            IPAddress address = IPAddress.Parse("127.0.0.1");
+            IPEndPoint ip = new IPEndPoint(address, 9999);
+            //Socket socket = tcpListener.AcceptSocket();
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
+            socket.Bind(ip);
+            socket.Listen(32);
 
             // add players
             RandomPlayer mplayer1 = new RandomPlayer("Adam");

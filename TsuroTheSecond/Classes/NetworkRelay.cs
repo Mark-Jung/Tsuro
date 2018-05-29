@@ -14,9 +14,11 @@ namespace TsuroTheSecond
         public StreamWriter writer;
         public StreamReader reader;
         public NetworkStream networkStream;
+        public Socket handler;
         public NetworkRelay(Socket socket)
         {
-            networkStream = new NetworkStream(socket);
+            handler = socket.Accept();
+            networkStream = new NetworkStream(handler);
             writer = new StreamWriter(networkStream);
             reader = new StreamReader(networkStream);
 
@@ -37,6 +39,8 @@ namespace TsuroTheSecond
             writer.Close();
             networkStream.Close();
             reader.Close();
+            handler.Shutdown(SocketShutdown.Both);  
+            handler.Close();  
         }
     }
 }
