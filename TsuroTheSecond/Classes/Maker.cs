@@ -9,7 +9,7 @@ namespace TsuroTheSecond
         public Maker()
         {
         }
-
+        // untested
         public XElement PlayerNameXML(string playername){
             XElement playernamexml = new XElement("player-name", playername);
             return playernamexml;
@@ -291,6 +291,14 @@ namespace TsuroTheSecond
             xmlDocument.LoadXml(input.ToString());
             XmlNode xmlNode = xmlDocument.FirstChild;
             return xmlNode;
+        }
+
+        public XmlElement ToXmlElement(XElement input)
+        {
+            XmlDocument doc = new XmlDocument();
+
+            XmlElement element = doc.ReadNode(input.CreateReader()) as XmlElement;
+            return element;
         }
     }
 }

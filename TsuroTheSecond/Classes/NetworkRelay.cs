@@ -11,30 +11,7 @@ namespace TsuroTheSecond
         public NetworkRelay()
         {
         }
-
-        public XmlNode Receiver(string s)
-        {
-            int i = 0;
-            string line = "";
-            while (i < s.Length && s[i] != '\n')
-            {
-                if (s[i] != ' ')
-                    line += s[i];
-                i++;
-            }
-            XmlDocument xmlDocument = new XmlDocument();
-            try
-            {
-                xmlDocument.LoadXml(line.ToString());
-            }
-            catch (Exception e)
-            {
-                throw new ArgumentException("Invalid XML");
-            }
-            XmlNode newNode = xmlDocument.DocumentElement;
-            return newNode;
-        }
-        public XmlNode SingleRelay (XmlNode output)
+        public XmlNode SingleRelay (string output)
         {
             Console.WriteLine(output);
             string answer = Console.ReadLine();
@@ -43,8 +20,5 @@ namespace TsuroTheSecond
             XmlNode newNode = doc.DocumentElement;
             return newNode;
         }
-
-
-
     }
 }

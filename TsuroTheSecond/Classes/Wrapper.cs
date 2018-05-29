@@ -15,14 +15,14 @@ namespace TsuroTheSecond
         {
         }
 
-        public XmlNode GetName(Player player)
+        public XmlNode GetName(PlayerProxy player)
         {
             string name = player.iplayer.GetName();
             XElement nameXelement = maker.PlayerNameXML(name);
             return maker.ToXmlNode(nameXelement);
         }
 
-        public XmlNode Initialize(Player player, XmlNode node)
+        public XmlNode Initialize(PlayerProxy player, XmlNode node)
         {
             (string color, List<string> list_of_color) = parser.InitializeXML(node);
             if(player.Color != color){
@@ -32,7 +32,7 @@ namespace TsuroTheSecond
             return maker.ToXmlNode(maker.VoidXML());
         }
 
-        public XmlNode PlacePawn(Player player, XmlNode node)
+        public XmlNode PlacePawn(PlayerProxy player, XmlNode node)
         {
             (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions) = this.parser.PlacePawnXML(node);
             Board board = this.initBoardBuilder(TilesTobePlaced, TokenPositions);
@@ -96,7 +96,7 @@ namespace TsuroTheSecond
         }
 
 
-        public XmlNode PlayTurn(Player player, XmlNode node){
+        public XmlNode PlayTurn(PlayerProxy player, XmlNode node){
             (Dictionary<(int, int), Tile>TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions, HashSet<Tile> hand, List<int> n) = parser.PlayTurnXML(node);
             Board board = this.BoardBuilder(TilesTobePlaced, TokenPositions);
             List<Tile> Hand = hand.ToList();

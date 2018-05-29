@@ -12,13 +12,11 @@ namespace TsuroTheSecond
         public Player player;
         public NetworkRelay relay = new NetworkRelay();
 
-        // need to fix  Player  to IPlayer. NPlayer should implement IPlayer.
-
         protected string name;
         public string color;
         protected List<string> player_colors;
-        protected enum State { start, initialized, loop, end };
-        protected State playerState;
+        public enum State { start, initialized, loop, end };
+        public State playerState;
 
         public NPlayer(string _name, string _color)
         {
@@ -33,9 +31,9 @@ namespace TsuroTheSecond
                 throw new Exception("Player should be in start state");
             }
             // make initialize xml
-            XmlNode initializeXML = maker.ToXmlNode(maker.InitializeXML(_color, all_colors));
+            XmlElement initializeXML = maker.ToXmlElement(maker.InitializeXML(_color, all_colors));
 
-            XmlNode answer = relay.SingleRelay(initializeXML);
+            XmlNode answer = relay.SingleRelay(initializeXML.OuterXml);
             if(parser.GetCommand(answer) == "void")
             {
                 // change state to initialized
@@ -53,9 +51,9 @@ namespace TsuroTheSecond
             {
                 throw new Exception("Player should be in initialized state");
             }
-            XmlNode placepawnXML = maker.ToXmlNode(maker.PlacePawnXML(board));
+            XmlElement placepawnXML = maker.ToXmlElement(maker.PlacePawnXML(board));
 
-            XmlNode answer = relay.SingleRelay(placepawnXML);
+            XmlNode answer = relay.SingleRelay(placepawnXML.OuterXml);
 
             // parse response and turn the game object
             (Position position1, Position position2) = parser.PawnLocXML(answer);
@@ -78,9 +76,9 @@ namespace TsuroTheSecond
             {
                 throw new Exception("Player should be in loop state");
             }
-            XmlNode PlayTurnXML = maker.ToXmlNode(maker.PlayTurnXML(board, hand, deck));
+            XmlElement PlayTurnXML = maker.ToXmlElement(maker.PlayTurnXML(board, hand, deck));
 
-            XmlNode answer = relay.SingleRelay(PlayTurnXML);
+            XmlNode answer = relay.SingleRelay(PlayTurnXML.OuterXml);
             Tile tile = parser.TileXML(answer);
             return tile;
         }
@@ -92,9 +90,9 @@ namespace TsuroTheSecond
                 throw new Exception("Player is in wrong state");
             }
 
-            XmlNode EndGameXML = maker.ToXmlNode(maker.EndGameXML(board, colors));
+            XmlElement EndGameXML = maker.ToXmlElement(maker.EndGameXML(board, colors));
 
-            XmlNode answer = relay.SingleRelay(EndGameXML);
+            XmlNode answer = relay.SingleRelay(EndGameXML.OuterXml);
 
             if(parser.GetCommand(answer) != "void")
             {
@@ -104,37 +102,13 @@ namespace TsuroTheSecond
             playerState = State.end;
         }
 
-        public XmlNode Identifier(XmlNode node)
-        {
-            /*
-             * Accepts 
-             */
-
-            string command = parser.GetCommand(node);
-            switch (command)
-            {
-                case "get-name":
-                    return wrapper.GetName(this.player);
-                case "initialize":
-                    return wrapper.Initialize(this.player, node);
-                case "place-pawn":
-                    return wrapper.PlacePawn(this.player, node);
-                //case "play-turn":
-                    //return wrapper.PlayTurn(this.player, node);
-                //case "end-game":
-                    //return wrapper.EndGame(player, node);
-
-                default:
-                    throw new ArgumentException("Invalid Command Received");
-            }
-        }
-
         public String GetName()
         {
             // make the get-name xml call
-            XmlNode GetNameXml = maker.ToXmlNode(maker.GetNameXML());
-            XmlNode answer = relay.SingleRelay(GetNameXml);
-            return parser.PlayerNameXML(answer);
+            XmlElement GetNameXml = maker.ToXmlElement(maker.GetNameXML());
+            XmlNode answer = relay.SingleRelay(GetNameXml.OuterXml);
+            string _name = parser.PlayerNameXML(answer);
+            return _name;
         }
 
         public String GetColor()
