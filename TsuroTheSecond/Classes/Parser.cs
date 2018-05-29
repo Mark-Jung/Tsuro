@@ -318,5 +318,16 @@ namespace TsuroTheSecond
             (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions) = this.BoardXML(board);
             return (TilesTobePlaced, TokenPositions, list_of_color);
         }
+
+        // untested
+        public string PlayerNameXML(XmlNode playername)
+        {
+            if(playername.Name != "player-name") 
+            {
+                throw new ArgumentException("Expected player-name tag");
+            }
+            return playername.InnerText.Replace(" ", "");
+        }
+
     }
 }

@@ -60,11 +60,35 @@ namespace TsuroTheSecond
             return xy;
         }
 
-        public XElement ColorXML(string color) {
-            if(Constants.colors.Contains(color)){
+        public XElement ColorXML(string color)
+        {
+            if (Constants.colors.Contains(color))
+            {
                 return new XElement("color", color);
             }
             throw new ArgumentException("given color needs to be one of the legal colors");
+        }
+
+        //untested 
+        public XElement ListofColorXML(List<string> colors)
+        {
+            XElement list = new XElement("list", "");
+            foreach(string color in colors)
+            {
+                list.Add(this.ColorXML(color));
+            }
+            return list;
+        }
+
+        //untested 
+        public XElement SetofColorXML(List<string> colors)
+        {
+            XElement set = new XElement("set", "");
+            foreach (string color in colors)
+            {
+                set.Add(this.ColorXML(color));
+            }
+            return set;
         }
 
         public XElement ListofTilesXML(List<Tile> listoftiles){
@@ -204,11 +228,63 @@ namespace TsuroTheSecond
             boardxml.Add(pawnsxml);
             return boardxml;
         }
-
+        /// <summary>
+        /// Voids the xml.
+        /// </summary>
+        /// <returns>The xml.</returns>
         public XElement VoidXML()
         {
             return new XElement("void", "");
         }
+
+        // untested
+        public XElement InitializeXML(string color, List<string> other_colors)
+        {
+            XElement initializeXML = new XElement("initialize", "");
+            initializeXML.Add(ColorXML(color));
+            initializeXML.Add(ListofColorXML(other_colors));
+            return initializeXML;
+        }
+
+        // untested
+        public XElement PlacePawnXML(Board board)
+        {
+            XElement placepawnXML = new XElement("place-pawn", "");
+            placepawnXML.Add(BoardXML(board));
+            return placepawnXML;
+        }
+
+        // untested
+        // play-turn      ;; board? (set/c tile?) natural? -> tile?
+        public XElement PlayTurnXML(Board board, List<Tile> hand, int n)
+        {
+            XElement playturnXML = new XElement("play-turn", "");
+            playturnXML.Add(BoardXML(board));
+            playturnXML.Add(SetofTilesXML(hand));
+            playturnXML.Add(NXML(n));
+            return playturnXML;
+        }
+
+        // untested
+        public XElement EndGameXML(Board board, List<string> colors)
+        {
+            XElement EndGameXML = new XElement("end-game", "");
+            EndGameXML.Add(BoardXML(board));
+            EndGameXML.Add(SetofColorXML(colors));
+            return EndGameXML;
+        }
+
+        // untested
+        public XElement GetNameXML()
+        {
+            return new XElement("get-name", "");
+        }
+
+        /// <summary>
+        /// Tos the xml node.
+        /// </summary>
+        /// <returns>The xml node.</returns>
+        /// <param name="input">XElement.</param>
 
         public XmlNode ToXmlNode(XElement input){
             XmlDocument xmlDocument = new XmlDocument();

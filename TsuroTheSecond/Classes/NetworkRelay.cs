@@ -1,6 +1,8 @@
 ﻿using System;
 using TsuroTheSecond;
 using System.Xml;
+using System.Xml.Linq;
+
 
 namespace TsuroTheSecond
 {
@@ -30,6 +32,15 @@ namespace TsuroTheSecond
                 throw new ArgumentException("Invalid XML");
             }
             XmlNode newNode = xmlDocument.DocumentElement;
+            return newNode;
+        }
+        public XmlNode SingleRelay (XmlNode output)
+        {
+            Console.WriteLine(output);
+            string answer = Console.ReadLine();
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(answer);
+            XmlNode newNode = doc.DocumentElement;
             return newNode;
         }
 
