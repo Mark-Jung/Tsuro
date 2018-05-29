@@ -1,5 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.IO;
+
+
 namespace TsuroTheSecond
 {
     public class Tournament
@@ -8,18 +14,28 @@ namespace TsuroTheSecond
         {
         }
 
-        public void Play(int player_cnt){
+
+        public void Play(){
             // make server
             Server server = new Server();
+
+            IPEndPoint ip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9999);
+
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
 
             // add players
             RandomPlayer mplayer1 = new RandomPlayer("Adam");
             MostSymmetricPlayer mplayer2 = new MostSymmetricPlayer("John");
             LeastSymmetricPlayer mplayer3 = new LeastSymmetricPlayer("Cathy");
+            NPlayer nPlayer1 = new NPlayer("Mark", socket);
+            NPlayer nPlayer2 = new NPlayer("Ethan", socket);
 
             server.AddPlayer(mplayer1, "blue");
             server.AddPlayer(mplayer2, "green");
             server.AddPlayer(mplayer3, "hotpink");
+            server.AddPlayer(nPlayer1, "red");
+            server.AddPlayer(nPlayer2, "purple");
 
             // init positions of players
             server.InitPlayerPositions();
@@ -85,9 +101,11 @@ namespace TsuroTheSecond
             //    tournament.Play(i);
             //    Console.WriteLine("Ending the tournament with {0}players!", i);
             //}
-            //Tournament tournament = new Tournament();
-            //tournament.Play(3);
+            Tournament tournament = new Tournament();
+            tournament.Play();
 
         }
+
+
     }
 }

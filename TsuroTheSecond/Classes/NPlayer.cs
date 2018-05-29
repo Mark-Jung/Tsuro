@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Xml;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Sockets;
+
+
 
 namespace TsuroTheSecond
 {
@@ -9,18 +13,19 @@ namespace TsuroTheSecond
         public Parser parser = new Parser();
         public Maker maker = new Maker();
         public Wrapper wrapper = new Wrapper();
-        public Player player;
-        public NetworkRelay relay = new NetworkRelay();
+        public NetworkRelay relay;
 
+        public Player player;
         protected string name;
         public string color;
         protected List<string> player_colors;
         public enum State { start, initialized, loop, end };
         public State playerState;
 
-        public NPlayer(string _name, string _color)
+        public NPlayer(string _name, Socket socket)
         {
             this.name = _name;
+            this.relay = new NetworkRelay(socket);
             this.playerState = State.start;
         }
 
@@ -100,6 +105,7 @@ namespace TsuroTheSecond
             }
 
             playerState = State.end;
+            relay.CloseMe();
         }
 
         public String GetName()
