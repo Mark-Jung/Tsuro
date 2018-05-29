@@ -619,7 +619,7 @@ namespace TsuroTheSecondTests
             board += "</board>";
             endgame += board;
             //list of colors
-            string listofcolors = "<list> <color> blue </color> </list>";
+            string listofcolors = "<set><color>blue</color></set>";
             endgame += listofcolors;
             endgame += "</end-game>";
 

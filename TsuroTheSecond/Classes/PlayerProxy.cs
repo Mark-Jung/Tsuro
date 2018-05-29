@@ -30,8 +30,8 @@ namespace TsuroTheSecond
             string command = parser.GetCommand(node);             switch (command)             {                 case "get-name":                     return wrapper.GetName(this);                 case "initialize":                     return wrapper.Initialize(this, node);                 case "place-pawn":                     return wrapper.PlacePawn(this, node);
                 case "play-turn":
                     return wrapper.PlayTurn(this, node);
-                //case "end-game":
-                //return wrapper.EndGame(player, node);
+                case "end-game":
+                return wrapper.EndGame(this, node);
 
                 default:                     throw new ArgumentException("Invalid Command Received");             }         } 
 

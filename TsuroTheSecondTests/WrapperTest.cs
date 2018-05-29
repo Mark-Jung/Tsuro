@@ -135,6 +135,29 @@ namespace TsuroTheSecondTests
             XmlNode output = wrapper.PlayTurn(leastsymRed, newNode);
             Assert.AreEqual(expected, output.OuterXml);
         }
+        [TestMethod]
+        public void TestEndGame()
+        {
+            string endgame = "<end-game>";
+            string board = "<board>";
+            string Tiles = "<map><ent><xy><x>0</x><y>0</y></xy><tile><connect><n>0</n><n>5</n></connect><connect><n>1</n><n>4</n></connect><connect><n>2</n><n>7</n></connect><connect><n>3</n><n>6</n></connect></tile></ent></map>";
+            string Pawns = "<map><ent><color>blue</color><pawn-loc><h></h><n>1</n><n>0</n></pawn-loc></ent><ent><color>red</color><pawn-loc><v></v><n>1</n><n>0</n></pawn-loc></ent></map>";
+            board += Tiles;
+            board += Pawns;
+            board += "</board>";
+            endgame += board;
+            string colors = "<color>blue</color><color>green</color><color>red</color>";
+            string setofcolors = "<set>" + colors + "</set>";
+            endgame += setofcolors;
+            endgame += "</end-game>";
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(endgame);
+            XmlNode newNode = xmlDocument.DocumentElement;
+            randomPlayer.color = "blue";
+            randomPlayer.playerState = RandomPlayer.State.loop;
+            XmlNode output = randBlue.Identifier(newNode);
+            Assert.AreEqual("<void></void>", output.OuterXml);
+        }
     }
 }
 

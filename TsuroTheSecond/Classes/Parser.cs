@@ -305,8 +305,8 @@ namespace TsuroTheSecond
                 throw new ArgumentException("Expected board as first tag");
 
             XmlNode listofcolorsXML = endgame.LastChild;
-            if (listofcolorsXML.Name != "list")
-                throw new ArgumentException("Expected list of color as the second tag");
+            if (listofcolorsXML.Name != "set")
+                throw new ArgumentException("Expected set of color as the second tag");
 
             List<string> list_of_color = new List<string>();
             foreach (XmlNode each in listofcolorsXML)

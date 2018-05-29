@@ -105,5 +105,13 @@ namespace TsuroTheSecond
             return maker.ToXmlNode(maker.TileXML(tile));
         }
 
+        public XmlNode EndGame(PlayerProxy player, XmlNode node)
+        {
+            (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions, List<string> list_of_colors) = parser.EndGameXML(node);
+            Board board = BoardBuilder(TilesTobePlaced, TokenPositions);
+            player.iplayer.EndGame(board, list_of_colors);
+            return maker.ToXmlNode(maker.VoidXML());
+        }
+
     }
 }

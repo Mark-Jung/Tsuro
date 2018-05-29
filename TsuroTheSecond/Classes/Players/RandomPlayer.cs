@@ -6,11 +6,11 @@ namespace TsuroTheSecond
 {
     public class RandomPlayer : IPlayer
     {
-        protected string name;
-        string color;
+        public string name;
+        public string color;
         protected List<string> player_colors;
-        protected enum State { start, initialized, loop, end };
-        protected State playerState;
+        public enum State { start, initialized, loop, end };
+        public State playerState;
 
         public RandomPlayer(string _name)
         {
