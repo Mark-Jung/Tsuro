@@ -11,7 +11,6 @@ namespace TsuroTheSecondTests
     [TestClass]
     public class NetworkRelayTest
     {
-        NetworkRelay nr = new NetworkRelay();
 
 
     }
