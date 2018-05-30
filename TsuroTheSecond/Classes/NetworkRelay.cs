@@ -15,11 +15,11 @@ namespace TsuroTheSecond
         public StreamReader reader;
         public NetworkStream networkStream;
         public Socket handler;
-        public NetworkRelay(Socket socket)
+        public NetworkRelay(StreamWriter _writer, StreamReader _reader)
         {
-            networkStream = new NetworkStream(handler);
-            writer = new StreamWriter(networkStream);
-            reader = new StreamReader(networkStream);
+            writer = _writer;
+            reader = _reader;
+
         }
         public XmlNode SingleRelay (string output)
         {

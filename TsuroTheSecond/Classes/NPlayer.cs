@@ -27,7 +27,10 @@ namespace TsuroTheSecond
             this.name = _name;
             Socket handler = socket.Accept();
             Console.WriteLine("Accepted Socket");
-            this.relay = new NetworkRelay(socket);
+            NetworkStream networkStream = new NetworkStream(handler);
+            StreamWriter writer = new StreamWriter(networkStream);
+            StreamReader reader = new StreamReader(networkStream);
+            this.relay = new NetworkRelay(writer, reader);
             Console.WriteLine("Got the stream setup");
             this.playerState = State.start;
         }

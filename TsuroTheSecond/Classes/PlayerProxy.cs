@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Net;
 using System.Net.Sockets;
+using System.IO;
+
 
 namespace TsuroTheSecond
 {
@@ -33,7 +35,10 @@ namespace TsuroTheSecond
             // Connect the socket to the remote endpoint. Catch any errors.  
             sender.Connect(remoteEP);
             Console.WriteLine("Connected to the endpoint, which is: " + remoteEP.ToString());
-            networkRelay = new NetworkRelay(sender);
+            NetworkStream networkStream = new NetworkStream(sender);
+            StreamWriter writer = new StreamWriter(networkStream);
+            StreamReader reader = new StreamReader(networkStream);
+            networkRelay = new NetworkRelay(writer, reader);
             Console.WriteLine("Got the streams set up for proxy player");
         }
 
@@ -47,6 +52,7 @@ namespace TsuroTheSecond
         public XmlNode Identifier(XmlNode node)         {
             string command = parser.GetCommand(node);             switch (command)             {                 case "get-name":                     return wrapper.GetName(this);                 case "initialize":                     return wrapper.Initialize(this, node);                 case "place-pawn":                     return wrapper.PlacePawn(this, node);
                 case "play-turn":
+                    Console.WriteLine("Going to play turn!");
                     return wrapper.PlayTurn(this, node);
                 case "end-game":
                     networkRelay.CloseMe();

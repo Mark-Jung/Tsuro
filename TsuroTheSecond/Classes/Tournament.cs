@@ -9,7 +9,7 @@ namespace TsuroTheSecond
 {
     public class Tournament
     {
-        int port = 9999;
+        int port = 9995;
         //static TcpListener tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 9999);
         public Tournament()
         {
@@ -20,7 +20,7 @@ namespace TsuroTheSecond
             // launch the proxy player
             // 1. constructor: machine player, color, port number
 
-            PlayerProxy playerProxy = new PlayerProxy(new MostSymmetricPlayer("Mark"), "red", 9999);
+            PlayerProxy playerProxy = new PlayerProxy(new MostSymmetricPlayer("Mark"), "red", 9995);
             Console.WriteLine("Made the proxyplayer");
             // run
             while(true){
@@ -46,7 +46,7 @@ namespace TsuroTheSecond
 
             // add players
             RandomPlayer mplayer1 = new RandomPlayer("Adam");
-            MostSymmetricPlayer mplayer2 = new MostSymmetricPlayer("John");
+            LeastSymmetricPlayer mplayer2 = new LeastSymmetricPlayer("John");
             LeastSymmetricPlayer mplayer3 = new LeastSymmetricPlayer("Cathy");
             Console.WriteLine("Added 3 machine players");
             Console.WriteLine("Going to add Mark, the network player. Starting proxyplayer thread");

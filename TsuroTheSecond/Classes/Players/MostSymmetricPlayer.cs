@@ -95,8 +95,11 @@ namespace TsuroTheSecond
             {
                 throw new Exception("Player should be in loop state");
             }
+            Console.WriteLine(this.name + "'s turn is here and about to choose!");
             // all legal options
             List<Tile> legal_options = board.AllPossibleTiles(this.color, hand);
+            Console.WriteLine("Got all the available options");
+
             // all legal options, rid of overlapped.
             IDictionary<string, Tile> unique_legal_options = new Dictionary<string, Tile>();
             foreach (Tile each in legal_options)
@@ -107,6 +110,7 @@ namespace TsuroTheSecond
                     unique_legal_options.Add(path_map, each);
                 }
             }
+            Console.WriteLine("Unique choices for the tiles.");
             // new list of legal tiles sorted by symmetricity, descending.
             List<Tile> sorted_legal_options = unique_legal_options.Values.ToList().OrderBy(obj => obj.symmetricity).ToList();
             return sorted_legal_options[0];
