@@ -103,8 +103,10 @@ namespace TsuroTheSecond
         public List<Tile> AllPossibleTiles(string color, List<Tile> hands) {
             List<Tile> legal = new List<Tile>();
             List<Tile> illegal = new List<Tile>();
+            Console.WriteLine("Endtered AllPossibleTiles for color: " + color);
 
             int hand_size = hands.Count;
+            Console.WriteLine("Hand size: " + hand_size);
             for (int i = 0; i < hand_size; i++) {
                 for (int j = 0; j < 4; j++) {
                     Tile tile = new Tile(hands[i]);

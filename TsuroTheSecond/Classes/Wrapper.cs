@@ -115,9 +115,12 @@ namespace TsuroTheSecond
 
         public XmlNode PlayTurn(PlayerProxy player, XmlNode node){
             (Dictionary<(int, int), Tile>TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions, HashSet<Tile> hand, List<int> n) = parser.PlayTurnXML(node);
+            Console.WriteLine("XML parsed safely");
             Board board = this.BoardBuilder(TilesTobePlaced, TokenPositions);
+            Console.WriteLine("Board made");
 
             List<Tile> Hand = hand.ToList();
+            Console.WriteLine("Hand made");
 
             Tile tile = player.iplayer.PlayTurn(board, Hand, n[0]);
             return maker.ToXmlNode(maker.TileXML(tile));

@@ -153,24 +153,29 @@ namespace TsuroTheSecond
             //Console.WriteLine("Currently in LegalPlay, Server.cs");
             //Console.WriteLine("game state is: safe");
 
+
             // Check for valid tile
             if (tile == null || !player.TileinHand(tile)) {
                 ReplacePlayer(player);
                 Console.WriteLine("Player yielded an illegal tile and has been replaced");
                 return false;
             }
+            Console.WriteLine("Tile is valid!");
 
             List<Tile> all_options = b.AllPossibleTiles(player.Color, player.Hand);
+            Console.WriteLine("Got all the possible tiles!");
 
             // if there's no options that don't kill you, then any tile is legal
             if (all_options.Count == 0) {
                 return true;
             }
+            Console.WriteLine("Has at least one valid option.");
 
             // try if the tile is in all_options
             // If so, return true
             foreach(Tile goodTile in all_options){
-                if(goodTile.CompareByPath(tile)){
+                if(goodTile.id == tile.id){
+                    Console.WriteLine("Got a valid matching Tile!");
                     return true;
                 }
             }
@@ -194,6 +199,7 @@ namespace TsuroTheSecond
             gameState = State.loop;
 
             Player currentPlayer = this.alive[0];
+            Console.WriteLine("The current player is " + currentPlayer.iplayer.GetName());
 
             if (currentPlayer.Hand.Count > 2) {
                 throw new ArgumentException("Player should have 2 or less tiles in hand");
@@ -208,12 +214,14 @@ namespace TsuroTheSecond
                 }
             }
 
+            Console.WriteLine("Added all the tiles in hand!");
+
             int tileCount = 0;
             foreach(List<Tile> row in board.tiles) {
                 foreach(Tile t in row) {
                     if (t == null) { continue; }
                     foreach(Tile dif_tile in all_tiles){
-                        if(!t.IsDifferent(dif_tile)){
+                        if(t.id == dif_tile.id){
                             throw new Exception("Tile to be played or in hand is already on board");
                         }
                     }
@@ -221,6 +229,7 @@ namespace TsuroTheSecond
                     tileCount++;
                 } 
             }
+            Console.WriteLine("Checked if the tiles in hand are different from the ones on board!");
 
             int total = currentPlayer.Hand.Count + tileCount;
             if (all_tiles.Count != total) {
@@ -231,6 +240,7 @@ namespace TsuroTheSecond
             // places tile
             var next = board.ReturnNextSpot(currentPlayer.Color);
             board.PlaceTile(tile, next.Item1, next.Item2);
+            Console.WriteLine("Moved players");
 
             // consequence of moving
             List<Player> fatalities = new List<Player>();
@@ -241,6 +251,8 @@ namespace TsuroTheSecond
                 }
             }
 
+            Console.WriteLine("Killing players and redistributing cards!");
+
             foreach (Player p in fatalities)
             {
                 KillPlayer(p);
@@ -248,6 +260,7 @@ namespace TsuroTheSecond
 
             DrawTile(currentPlayer, deck);
 
+            Console.WriteLine("Moving " + currentPlayer.iplayer.GetName() + " to the end of alive!");
             // put currentPlayer to end of _alive
             for (int i = 0; i < alive.Count; i++){
                 if(alive[i].Color == currentPlayer.Color){
@@ -256,18 +269,20 @@ namespace TsuroTheSecond
                     alive.Add(move_to_end);
                 }
             }
+            Console.WriteLine("Moved " + currentPlayer.iplayer.GetName() + " to the end of alive!");
 
-            // fix this shouldnt return false
             Boolean GameDone = false;
             List<Player> Victors = new List<Player>();
 
             if (alive.Count == 1)
             {
+                Console.WriteLine("GG!");
                 GameDone = true;
                 Victors.AddRange(alive);
             }
             else if (alive.Count == 0)
             {
+                Console.WriteLine("GG! Multiple Winners!");
                 GameDone = true;
                 Victors.AddRange(fatalities);
             }
@@ -286,12 +301,20 @@ namespace TsuroTheSecond
             // distribute player hand to whoevers waiting in queue or just add to deck
             if (player.Hand.Count > 0) {
                 deck.AddRange(player.Hand);
-                int dragonCount = dragonQueue.Count;
+                int dragonqueueCount = dragonQueue.Count;
 
-                while(dragonQueue.Count > 0){
+
+                //Console.WriteLine("Giving " + dragonQueue[0].iplayer.GetName() + " priority for dragon tile!");
+                for (int i = 0; i < dragonqueueCount; i++)
+                {
                     DrawTile(dragonQueue[0], deck);
                     dragonQueue.Remove(dragonQueue[0]);
+                    Console.WriteLine("Dragon Queue size: " + dragonQueue.Count);
                 }
+                //DrawTile(dragonQueue[0], deck);
+                //dragonQueue.Remove(dragonQueue[0]);
+                //Console.WriteLine("Dragon Queue size: " + dragonQueue.Count);
+
             }
         }
 
@@ -303,25 +326,41 @@ namespace TsuroTheSecond
             }
         }
 
-        public void DrawTile(Player player, List<Tile> d) {
+        public void DrawTile(Player player, List<Tile> d)
+        {
             // how is this supposed to work with an interface?
             //Console.WriteLine(d.Count);
-            if (player.Hand.Count >= 3) {
+            if (player.Hand.Count >= 3)
+            {
                 throw new InvalidOperationException("Player can't have more than 3 cards in hand");
             }
-
-            if (d.Count <= 0) {
-                dragonQueue.Add(player);   
-            } else {
+            Console.WriteLine("Deck size is: " + d.Count);
+            Boolean AlreadyInDragonQueue = false;
+            foreach (Player inline in dragonQueue)
+            {
+                if (inline.Color == player.Color)
+                {
+                    AlreadyInDragonQueue = true;
+                    break;
+                }
+            }
+            if (d.Count <= 0 && AlreadyInDragonQueue)
+            {
+                return;
+            }
+            else if (d.Count <= 0 && (!AlreadyInDragonQueue))
+            {
+                Console.WriteLine("The deck was empty so now adding player " + player.iplayer.GetName() + " to the dragonQueue.");
+                dragonQueue.Add(player);
+            }
+            else
+            {
                 Tile t = d[0];
                 d.RemoveAt(0);
                 player.AddTiletoHand(t);
                 Console.WriteLine("Player " + player.iplayer.GetName() + " drew Tile!");
                 t.PrintMe();
             }
-
         }
-
-
     }
 }
