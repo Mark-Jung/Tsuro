@@ -2,40 +2,68 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 
 namespace TsuroTheSecond
 {
     public class Tournament
     {
-        static TcpListener tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 9999);
+        int port = 9999;
+        //static TcpListener tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 9999);
         public Tournament()
         {
+        }
+
+        static void ProxyPlay()
+        {
+            // launch the proxy player
+            // 1. constructor: machine player, color, port number
+
+            PlayerProxy playerProxy = new PlayerProxy(new MostSymmetricPlayer("Mark"), "red", 9999);
+            Console.WriteLine("Made the proxyplayer");
+            // run
+            while(true){
+                playerProxy.Play();
+            }
         }
 
 
         public void Play(){
             // make server
             Server server = new Server();
-            IPAddress address = IPAddress.Parse("127.0.0.1");
-            IPEndPoint ip = new IPEndPoint(address, 9999);
-            //Socket socket = tcpListener.AcceptSocket();
+            Console.WriteLine("Server instantiated");
+            // network server
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());  
+            IPAddress ipAddress = ipHostInfo.AddressList[0];  
+            IPEndPoint ip = new IPEndPoint(ipAddress, port); 
+
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(ip);
-            socket.Listen(32);
+            Console.WriteLine("Socket bound to ip address: " + ipAddress.ToString());
+            socket.Listen(10);
+            Console.WriteLine("Now listening for connection");
 
             // add players
             RandomPlayer mplayer1 = new RandomPlayer("Adam");
             MostSymmetricPlayer mplayer2 = new MostSymmetricPlayer("John");
             LeastSymmetricPlayer mplayer3 = new LeastSymmetricPlayer("Cathy");
+            Console.WriteLine("Added 3 machine players");
+            Console.WriteLine("Going to add Mark, the network player. Starting proxyplayer thread");
+            Thread newThread = new Thread(new ThreadStart(ProxyPlay));
+            newThread.Start();
             NPlayer nPlayer1 = new NPlayer("Mark", socket);
-            NPlayer nPlayer2 = new NPlayer("Ethan", socket);
+            Console.WriteLine("Added Mark, the network player");
+            //NPlayer nPlayer2 = new NPlayer("Ethan", socket);
 
             server.AddPlayer(mplayer1, "blue");
             server.AddPlayer(mplayer2, "green");
             server.AddPlayer(mplayer3, "hotpink");
+            // connect nPlayer1 to ProxyPlayer
+
             server.AddPlayer(nPlayer1, "red");
-            server.AddPlayer(nPlayer2, "purple");
+
+            //server.AddPlayer(nPlayer2, "purple");
 
             // init positions of players
             server.InitPlayerPositions();

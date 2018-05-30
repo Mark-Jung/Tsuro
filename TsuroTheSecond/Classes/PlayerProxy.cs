@@ -14,8 +14,9 @@ namespace TsuroTheSecond
         public readonly string Color;
         public List<Tile> Hand;
         public IPlayer iplayer;
+        public NetworkRelay networkRelay;
 
-        public PlayerProxy(IPlayer p, string c, IPAddress address)
+        public PlayerProxy(IPlayer p, string c, int port)
         {
             if (!Constants.colors.Contains(c))
             {
@@ -24,19 +25,34 @@ namespace TsuroTheSecond
             Hand = new List<Tile>();
             iplayer = p;
             Color = c;
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            IPAddress ipAddress = ipHostInfo.AddressList[0];
+            Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp );
+            Console.WriteLine("Made another socket for proxy player");
+            IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);  
+            // Connect the socket to the remote endpoint. Catch any errors.  
+            sender.Connect(remoteEP);
+            Console.WriteLine("Connected to the endpoint, which is: " + remoteEP.ToString());
+            networkRelay = new NetworkRelay(sender);
+            Console.WriteLine("Got the streams set up for proxy player");
+        }
+
+        public void Play()
+        {
+            XmlNode command = networkRelay.ListenForMe();
+            XmlNode answer = Identifier(command);
+            networkRelay.WriteForMe(answer.OuterXml);
         }
 
         public XmlNode Identifier(XmlNode node)         {
-            /*              * Accepts               */
-
             string command = parser.GetCommand(node);             switch (command)             {                 case "get-name":                     return wrapper.GetName(this);                 case "initialize":                     return wrapper.Initialize(this, node);                 case "place-pawn":                     return wrapper.PlacePawn(this, node);
                 case "play-turn":
                     return wrapper.PlayTurn(this, node);
                 case "end-game":
-                return wrapper.EndGame(this, node);
+                    networkRelay.CloseMe();
+                    return wrapper.EndGame(this, node);
 
                 default:                     throw new ArgumentException("Invalid Command Received");             }         } 
-
         public void AddTiletoHand(Tile tile)
         {
             if (this.Hand.Count >= 3)
@@ -84,11 +100,6 @@ namespace TsuroTheSecond
         {
             this.iplayer = player;
         }
-
-        public void Play()
-        {
-            
-        }
-
     }
+
 }
