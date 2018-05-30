@@ -77,18 +77,35 @@ namespace TsuroTheSecond
         public Board BoardBuilder(Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions)
         {
             Board board = new Board(6);
+            Console.WriteLine("Instantiated new board!");
             // places the tiles
             foreach (KeyValuePair<(int, int), Tile> entry in TilesTobePlaced)
             {
                 board.PlaceTile(entry.Value, entry.Key.Item1, entry.Key.Item2);
             }
+            Console.WriteLine("Placed the tiles!");
 
             // figures out which position is valid for starting the game
             foreach (KeyValuePair<string, (Position, Position)> entry in TokenPositions)
             {
+                if(entry.Value.Item1.IsDead()){
+                    Console.WriteLine("Juk el GAK!!");
+                    entry.Value.Item1.PrintMe();
+                    board.tokenPositions[entry.Key] = entry.Value.Item1;
+                    continue;
+                } else if(entry.Value.Item2.IsDead()){
+                    Console.WriteLine("Juk el GAK!!");
+                    entry.Value.Item2.PrintMe();
+                    board.tokenPositions[entry.Key] = entry.Value.Item2;
+                    continue;
+                }
+
+
                 if(board.tiles[entry.Value.Item1.x][entry.Value.Item1.y] is null){
+                    entry.Value.Item2.PrintMe();
                     board.tokenPositions[entry.Key] = entry.Value.Item2;
                 } else {
+                    entry.Value.Item1.PrintMe();
                     board.tokenPositions[entry.Key] = entry.Value.Item1;
                 }
             }
@@ -98,14 +115,10 @@ namespace TsuroTheSecond
 
         public XmlNode PlayTurn(PlayerProxy player, XmlNode node){
             (Dictionary<(int, int), Tile>TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions, HashSet<Tile> hand, List<int> n) = parser.PlayTurnXML(node);
-            Console.WriteLine("All parsed and good");
             Board board = this.BoardBuilder(TilesTobePlaced, TokenPositions);
-            Console.WriteLine("The board has been made");
 
             List<Tile> Hand = hand.ToList();
-            Console.WriteLine("The Hand has been made");
 
-            Console.WriteLine("Right before playturn!");
             Tile tile = player.iplayer.PlayTurn(board, Hand, n[0]);
             return maker.ToXmlNode(maker.TileXML(tile));
         }

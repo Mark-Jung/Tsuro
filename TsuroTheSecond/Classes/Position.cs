@@ -130,12 +130,60 @@ namespace TsuroTheSecond
             }
             return (next_x, next_y);
         }
+        public Position FlipMe(){
+            int next_x = x;
+            int next_y = y;
+            switch (port / 2)
+            {
+                case 0:
+                    // onward is the tile above
+                    next_y -= 1;
+                    if (port == 0){
+                        port = 5;
+                    } else {
+                        port = 4;
+                    }
+                    break;
+                case 1:
+                    // onward is the tile to the right
+                    next_x += 1;
+                    if (port == 2){
+                        port = 7;
+                    }else{
+                        port = 6;
+                    }
+                    break;
+                case 2:
+                    // onward is the tile below
+                    next_y += 1;
+                    if (port == 4) {
+                        port = 0;
+                    } else {
+                        port = 1;
+                    }
+                    break;
+                case 3:
+                    // onward is the tile to the left
+                    next_x -= 1;
+                    if (port == 6) {
+                        port = 3;
+                    } else {
+                        port = 2;
+                    }
+                    break;
+                default:
+                    throw new ArgumentException("Illegal onward value", "_onward");
+            }
+            return new Position(next_x, next_y, port, false);
+        }
         public void PrintMe(){
             Console.WriteLine("x: " + this.x);
             Console.WriteLine("y: " + this.y);
             Console.WriteLine("port: " + this.port);
         }
-
+        public bool IsDead(){
+            return (this.x < 0 || x > 5 || y < 0 || y > 5);
+        }
 
     }
 }
