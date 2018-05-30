@@ -9,7 +9,7 @@ namespace TsuroTheSecond
 {
     public class Tournament
     {
-        public int port = 9981;
+        public int port = 10000;
         public IPEndPoint iP;
         public Socket socket;
 
@@ -45,116 +45,112 @@ namespace TsuroTheSecond
 
 
         public void Play(){
-            // make server
-
-            // network server
-
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            IPAddress ipAddress = ipHostInfo.AddressList[0];
+            this.iP = new IPEndPoint(ipAddress, this.port);
+            this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            this.socket.Bind(this.iP);
+            this.socket.Listen(2);
 
             // add players
+
+            Console.WriteLine("Going to add Mark, the network player. Starting proxyplayer thread");
+
+            NPlayer nPlayer1 = GetConnection("Mark", "red");
+            NPlayer nPlayer2 = GetConnection("Ethan", "purple");
+
+
+            Server server = new Server();
+            Console.WriteLine("Server instantiated");
             RandomPlayer mplayer1 = new RandomPlayer("Adam");
             LeastSymmetricPlayer mplayer2 = new LeastSymmetricPlayer("John");
             LeastSymmetricPlayer mplayer3 = new LeastSymmetricPlayer("Cathy");
             Console.WriteLine("Added 3 machine players");
-            Console.WriteLine("Going to add Mark, the network player. Starting proxyplayer thread");
+            server.AddPlayer(mplayer1, "blue");
+            server.AddPlayer(mplayer2, "green");
+            server.AddPlayer(mplayer3, "hotpink");
 
-            NPlayer nPlayer1 = GetConnection("Mark", "red");
-            Console.WriteLine("Added Mark, the network player");
-            NPlayer nPlayer2 = GetConnection("Ethan", "purple");
+            nPlayer1.playerState = NPlayer.State.start;
+            // connect nPlayer1 to ProxyPlayer
+            server.AddPlayer(nPlayer1, "red");
+            server.AddPlayer(nPlayer2, "purple");
 
-            for (int i = 0; i < 100; i++)
+            // init positions of players
+            server.InitPlayerPositions();
+
+            server.ShuffleDeck(server.deck);
+
+            // game loop
+            bool game = true;
+            while (game && server.alive.Count > 0)
             {
-                Server server = new Server();
-                Console.WriteLine("Server instantiated");
-                server.AddPlayer(mplayer1, "blue");
-                server.AddPlayer(mplayer2, "green");
-                server.AddPlayer(mplayer3, "hotpink");
-                // connect nPlayer1 to ProxyPlayer
+                Player currentPlayer = server.alive[0];
+                Console.WriteLine("\n");
+                Console.WriteLine("\n");
+                Console.WriteLine("Now " + currentPlayer.iplayer.GetName() + "'s turn.");
+                Console.WriteLine("Position is: ");
+                server.board.tokenPositions[currentPlayer.Color].PrintMe();
 
-                server.AddPlayer(nPlayer1, "red");
-                server.AddPlayer(nPlayer2, "purple");
-
-                // init positions of players
-                server.InitPlayerPositions();
-
-                server.ShuffleDeck(server.deck);
-
-                // game loop
-                bool game = true;
-                while (game && server.alive.Count > 0)
+                // choose what tile to play
+                Console.WriteLine("Choosing Tile to play from");
+                foreach (Tile each in currentPlayer.Hand)
                 {
-                    Player currentPlayer = server.alive[0];
-                    Console.WriteLine("\n");
-                    Console.WriteLine("\n");
-                    Console.WriteLine("Now " + currentPlayer.iplayer.GetName() + "'s turn.");
-                    Console.WriteLine("Position is: ");
-                    server.board.tokenPositions[currentPlayer.Color].PrintMe();
-
-                    // choose what tile to play
-                    Console.WriteLine("Choosing Tile to play from");
-                    foreach (Tile each in currentPlayer.Hand)
-                    {
-                        each.PrintMe();
-                    }
-
-                    Tile playTile = currentPlayer.iplayer.PlayTurn(server.board, currentPlayer.Hand, server.deck.Count);
-                    Console.WriteLine("Tile to be played is: ");
-                    playTile.PrintMe();
-                    while (!server.LegalPlay(currentPlayer, server.board, playTile))
-                    {
-                        Console.WriteLine("Seems like that tile wasn't legal! Going into LegalPlay loop");
-                        playTile = currentPlayer.iplayer.PlayTurn(server.board, currentPlayer.Hand, server.deck.Count);
-
-                    }
-                    Console.WriteLine("Tile to be played was legal!");
-                    // take that tile out of hand
-                    currentPlayer.RemoveTilefromHand(playTile);
-                    Console.WriteLine("Removed that tile!");
-                    // play that tile
-                    (List<Tile> _deck, List<Player> _alive, List<Player> _dead, Board _board, Boolean GameDone, List<Player> Victors) = server.PlayATurn(server.deck, server.alive, server.dead, server.board, playTile);
-
-                    Console.WriteLine("Turn Summary:");
-                    Console.WriteLine("Deck count: " + server.deck.Count);
-                    Console.WriteLine("Alive count: " + server.alive.Count);
-                    Console.WriteLine("Position after turn: ");
-                    server.board.tokenPositions[currentPlayer.Color].PrintMe();
-                    Console.WriteLine("Survivor list: ");
-                    foreach (Player survived in server.alive)
-                    {
-                        Console.WriteLine(survived.iplayer.GetName());
-                    }
-                    Console.WriteLine("Dead count: " + server.dead.Count);
-                    Console.WriteLine("\n");
-                    Console.WriteLine("\n");
-
-
-                    if (GameDone)
-                    {
-                        foreach (Player victor in Victors)
-                        {
-                            if (!WinnerCount.ContainsKey(victor.iplayer.GetName()))
-                            {
-                                WinnerCount.Add(victor.iplayer.GetName(), 0);
-                            }
-                            WinnerCount[victor.iplayer.GetName()]++;
-                        }
-                        server.WinGame(Victors);
-
-                    }
-                    game = !GameDone;
+                    each.PrintMe();
                 }
+
+                Tile playTile = currentPlayer.iplayer.PlayTurn(server.board, currentPlayer.Hand, server.deck.Count);
+                Console.WriteLine("Tile to be played is: ");
+                playTile.PrintMe();
+                while (!server.LegalPlay(currentPlayer, server.board, playTile))
+                {
+                    Console.WriteLine("Seems like that tile wasn't legal! Going into LegalPlay loop");
+                    playTile = currentPlayer.iplayer.PlayTurn(server.board, currentPlayer.Hand, server.deck.Count);
+
+                }
+                Console.WriteLine("Tile to be played was legal!");
+                // take that tile out of hand
+                currentPlayer.RemoveTilefromHand(playTile);
+                Console.WriteLine("Removed that tile!");
+                // play that tile
+                (List<Tile> _deck, List<Player> _alive, List<Player> _dead, Board _board, Boolean GameDone, List<Player> Victors) = server.PlayATurn(server.deck, server.alive, server.dead, server.board, playTile);
+
+                Console.WriteLine("Turn Summary:");
+                Console.WriteLine("Deck count: " + server.deck.Count);
+                Console.WriteLine("Alive count: " + server.alive.Count);
+                Console.WriteLine("Position after turn: ");
+                server.board.tokenPositions[currentPlayer.Color].PrintMe();
+                Console.WriteLine("Survivor list: ");
+                foreach (Player survived in server.alive)
+                {
+                    Console.WriteLine(survived.iplayer.GetName());
+                }
+                Console.WriteLine("Dead count: " + server.dead.Count);
+                Console.WriteLine("\n");
+                Console.WriteLine("\n");
+
+
+                if (GameDone)
+                {
+                    foreach (Player victor in Victors)
+                    {
+                        if (!WinnerCount.ContainsKey(victor.iplayer.GetName()))
+                        {
+                            WinnerCount.Add(victor.iplayer.GetName(), 0);
+                        }
+                        WinnerCount[victor.iplayer.GetName()]++;
+                    }
+                    server.WinGame(Victors);
+
+                }
+                game = !GameDone;
             }
+       
 
         }
         static void Main(string[] args)
         {
             
             Tournament tournament = new Tournament();
-            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            tournament.iP = new IPEndPoint(ipAddress, tournament.port);
-            tournament.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            tournament.socket.Bind(tournament.iP);
-            tournament.socket.Listen(1);
 
 
             Console.WriteLine("Socket bound to ip address: " + ipAddress.ToString());
@@ -163,8 +159,8 @@ namespace TsuroTheSecond
 
             // game loop
             for (int i = 0; i < 100; i++){
-                
                 tournament.Play();
+                tournament.iP++;
             }
             Console.WriteLine("\n");
             Console.WriteLine("\n");

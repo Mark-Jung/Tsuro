@@ -489,7 +489,7 @@ namespace TsuroTheSecondTests
             p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
             // testTile3 will kill without rotation, but with rotation won't kill.
             server.gameState = Server.State.loop;
-            Assert.IsFalse(server.LegalPlay(p_1, server.board, testTile3));
+            Assert.IsTrue(server.LegalPlay(p_1, server.board, testTile3));
         }
 
         [TestMethod]

@@ -83,9 +83,16 @@ namespace TsuroTheSecond
             // checks if placing a tile on the board will kill the player 
             Boolean playerAlive = true;
             var origNext = this.ReturnNextSpot(color);
+            Console.WriteLine("Next spot for the player is x: " + origNext.Item1 + " y: " + origNext.Item2);
             Position origPosition = new Position(this.ReturnPlayerSpot(color));
-            this.PlaceTile(tile, origNext.Item1, origNext.Item2);
+            try{
+                this.PlaceTile(tile, origNext.Item1, origNext.Item2);
+            } catch(ArgumentException){
+                return false;
+            }
+            Console.WriteLine("Placed Tile");
             this.MovePlayer(color);
+            Console.WriteLine("Moved player");
 
 
             //playerAlive = !player.IsDead();
@@ -93,6 +100,7 @@ namespace TsuroTheSecond
 
             // undoing changes to the board
             this.PlaceTile(null, origNext.Item1, origNext.Item2);
+            Console.WriteLine("Undid changes!");
 
             this.tokenPositions[color].x = origPosition.x;
             this.tokenPositions[color].y = origPosition.y;
@@ -113,6 +121,8 @@ namespace TsuroTheSecond
                     for (int k = 0; k < j; k++) {
                         tile.Rotate(); 
                     }
+                    Console.WriteLine("Rotataed " + j + "times!");
+                    Console.WriteLine("is it valid?");
                     if (this.ValidTilePlacement(color, tile)) {
                         legal.Add(tile);
                     } else {
@@ -120,6 +130,7 @@ namespace TsuroTheSecond
                     }
                 }
             }
+            Console.WriteLine("done sorting out the legal illegal tiles");
             // if none of the options are legal, return all illegal options
             //Console.WriteLine("legal count: " + legal.Count.ToString());
             if(legal.Count > 0){
@@ -129,8 +140,9 @@ namespace TsuroTheSecond
             }
         }
 
-        public void MovePlayer(string color) {
-            Position cur_pos= new Position(tokenPositions[color]);
+        public void MovePlayer(string color)
+        {
+            Position cur_pos = new Position(tokenPositions[color]);
             List<int> nxt_pos = new List<int>(3) { 0, 0, 0 };
             int[] port_table = new int[] { 5, 4, 7, 6, 1, 0, 3, 2 };
             Tile nxt_tile = null;
@@ -166,16 +178,14 @@ namespace TsuroTheSecond
                 // if not, break
                 // if so, update cur_pos
 
-                try
-                {
-                    nxt_tile = this.tiles[nxt_pos[0]][nxt_pos[1]];
-                }
-                catch (Exception)
+
+                if(nxt_pos[0] < 0 || nxt_pos[0] > 5 || nxt_pos[1] < 0 || nxt_pos[1] > 5)
                 {
                     recur = false;
+                } else {
+                    nxt_tile = this.tiles[nxt_pos[0]][nxt_pos[1]];
                 }
-                if (nxt_tile == null)
-                {
+                if (nxt_tile == null){
                     recur = false;
                 }
                 else
@@ -198,5 +208,8 @@ namespace TsuroTheSecond
 
             tokenPositions[color] = cur_pos;
         }
+
+
+
     }
 }
