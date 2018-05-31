@@ -14,6 +14,8 @@ namespace TsuroTheSecond
         public Maker maker = new Maker();
         public Wrapper wrapper = new Wrapper();
         public NetworkRelay relay;
+        public Socket handler;
+        public NetworkStream networkStream;
 
         public Player player;
         protected string name;
@@ -25,9 +27,9 @@ namespace TsuroTheSecond
         public NPlayer(string _name, Socket socket)
         {
             this.name = _name;
-            Socket handler = socket.Accept();
+            handler = socket.Accept();
             Console.WriteLine("Accepted Socket");
-            NetworkStream networkStream = new NetworkStream(handler);
+            networkStream = new NetworkStream(handler);
             StreamWriter writer = new StreamWriter(networkStream);
             StreamReader reader = new StreamReader(networkStream);
             this.relay = new NetworkRelay(writer, reader);
@@ -112,6 +114,8 @@ namespace TsuroTheSecond
 
             playerState = State.end;
             relay.CloseMe();
+            networkStream.Close();
+            handler.Close();
         }
 
         public String GetName()

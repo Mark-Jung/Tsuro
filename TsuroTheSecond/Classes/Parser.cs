@@ -109,11 +109,14 @@ namespace TsuroTheSecond
             if(pawns.Name != "map"){
                 throw new ArgumentException("Expected map tag for pawns");
             }
+            //Console.WriteLine(pawns.OuterXml);
             Dictionary<string, (Position, Position)> result = new Dictionary<string, (Position, Position)>();
             XmlNodeList entry_list = pawns.SelectNodes("ent");
+            //Console.WriteLine("Got the entries: " + entry_list.Count);
             foreach (XmlNode entry in entry_list)
             {
                 string color = this.ColorXML(entry.FirstChild);
+                //Console.WriteLine("Got the color");
                 (Position position, Position position1) = this.PawnLocXML(entry.LastChild);
                 result.Add(color, (position, position1));
             }
@@ -182,13 +185,23 @@ namespace TsuroTheSecond
             if(tiles.Name != "map"){
                 throw new ArgumentException("Expected map tag for tiles");
             }
+            //Console.WriteLine("Got the right tag for tiles");
+            //Console.WriteLine(tiles.OuterXml);
             Dictionary<(int, int), Tile> result = new Dictionary<(int, int), Tile>();
             XmlNodeList entry_list = tiles.ChildNodes;
+            //Console.WriteLine("Got the entry_list: " + entry_list.Count);
+            int i = 0;
             foreach(XmlNode entry in entry_list){
                 XmlNodeList XY_Tile = entry.ChildNodes;
                 (int x, int y) = this.XYXML(XY_Tile.Item(0));
+                //Console.WriteLine("xy valid" + x + "::" + y);
                 Tile tile = this.TileXML(XY_Tile.Item(1));
                 result.Add((x, y), tile);
+                //Console.WriteLine("Tile valid");
+
+                //Console.WriteLine("Tile placed at: " + x + " " + y);
+                //Console.WriteLine(i);
+                i++;
             }
             return result;
         }
@@ -198,8 +211,11 @@ namespace TsuroTheSecond
             if(board.Name != "board"){
                 throw new ArgumentException("Expected board tag");
             }
+            //Console.WriteLine("Got the right tag for board");
             Dictionary<(int, int), Tile> TilesTobePlaced = this.TilesXML(board.FirstChild);
+            //Console.WriteLine("Parsed Tiles");
             Dictionary<string, (Position, Position)> TokenPositions = this.PawnsXML(board.LastChild);
+            //Console.WriteLine("Parsed Pawns");
             return (TilesTobePlaced, TokenPositions);
         }
 
@@ -218,21 +234,27 @@ namespace TsuroTheSecond
             if(SetofTiles.Name != "set"){
                 throw new ArgumentException("Expected set tag for set of tiles");
             }
+            //Console.WriteLine("Got the right tag for set of tiles");
+            //Console.WriteLine(SetofTiles.OuterXml);
             HashSet<Tile> result = new HashSet<Tile>();
-            Boolean same = false;
             XmlNodeList tilesXML = SetofTiles.ChildNodes;
-
+            //Console.WriteLine(tilesXML.Count);
             foreach( XmlNode tileXML in tilesXML){
+                Boolean same = false;
                 Tile newTile = this.TileXML(tileXML);
+                //Console.WriteLine("Made a new tile!");
                 foreach(Tile each in result){
                     if(!each.IsDifferent(newTile)){
                         same = true;
                         break;
                     }
+                    //Console.WriteLine("IsDifferent ran!");
                 }
                 if(!same){
                     result.Add(newTile);
+                    //Console.WriteLine("Added a tile");
                 }
+                //Console.WriteLine("didn't add a tile");
             }
             return result;
         }
@@ -259,15 +281,19 @@ namespace TsuroTheSecond
                 throw new ArgumentException("expected play-turn tag here");
             }
             XmlNode board = playturn.FirstChild;
+            //Console.WriteLine("Got board");
             XmlNode set_of_tiles = playturn.SelectSingleNode("/play-turn/set");
+            //Console.WriteLine("Got the hand");
             XmlNodeList numsXML = playturn.SelectNodes("/play-turn/n");
+            //Console.WriteLine("Got the deck count");
             List<int> nums = new List<int>();
             foreach(XmlNode num in numsXML) {
                 nums.Add(this.NXML(num));
-
             }
+            //Console.WriteLine("Parsed the deck count");
 
             (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions) = this.BoardXML(board);
+            //Console.WriteLine("Parsed the board");
             return (TilesTobePlaced, TokenPositions, this.SetofTilesXML(set_of_tiles), nums);
         }
 

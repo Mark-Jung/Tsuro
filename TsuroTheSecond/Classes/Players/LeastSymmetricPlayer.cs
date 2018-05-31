@@ -96,6 +96,10 @@ namespace TsuroTheSecond
             }
             // all legal options
             List<Tile> legal_options = board.AllPossibleTiles(this.color, hand);
+            if(legal_options.Count == 0)
+            {
+                return new Tile(-1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            }
             // all legal options, rid of overlapped.
             IDictionary<string, Tile> unique_legal_options = new Dictionary<string, Tile>();
             foreach (Tile each in legal_options)

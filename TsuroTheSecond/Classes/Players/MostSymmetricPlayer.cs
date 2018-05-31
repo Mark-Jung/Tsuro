@@ -100,6 +100,7 @@ namespace TsuroTheSecond
 
             // all legal options, rid of overlapped.
             IDictionary<string, Tile> unique_legal_options = new Dictionary<string, Tile>();
+            //Console.WriteLine("Going into For loop to find unique tiles");
             foreach (Tile each in legal_options)
             {
                 string path_map = each.PathMap();
@@ -110,6 +111,7 @@ namespace TsuroTheSecond
             }
             // new list of legal tiles sorted by symmetricity, descending.
             List<Tile> sorted_legal_options = unique_legal_options.Values.ToList().OrderBy(obj => obj.symmetricity).ToList();
+            //Console.WriteLine("legal options count: " + sorted_legal_options.Count);
             return sorted_legal_options[0];
         }
     }

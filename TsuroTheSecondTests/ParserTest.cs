@@ -196,7 +196,8 @@ namespace TsuroTheSecondTests
         }
         [TestMethod]
         public void TestParserTilesOne(){
-            string xmlContent = "<map><ent><xy><x><n>3</n></x><y><n>4</n></y></xy><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile></ent></map>";
+            //string xmlContent = "<map><ent><xy><x><n>3</n></x><y><n>4</n></y></xy><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile></ent></map>";
+            string xmlContent = "<map><ent><xy><x>0</x><y>0</y></xy><tile><connect><n>6</n><n>7</n></connect><connect><n>0</n><n>3</n></connect><connect><n>1</n><n>4</n></connect><connect><n>2</n><n>5</n></connect></tile></ent><ent><xy><x>1</x><y>0</y></xy><tile><connect><n>6</n><n>5</n></connect><connect><n>7</n><n>1</n></connect><connect><n>0</n><n>3</n></connect><connect><n>2</n><n>4</n></connect></tile></ent><ent><xy><x>1</x><y>1</y></xy><tile><connect><n>0</n><n>7</n></connect><connect><n>1</n><n>6</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect></tile></ent><ent><xy><x>2</x><y>0</y></xy><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>3</n></connect><connect><n>2</n><n>7</n></connect><connect><n>5</n><n>6</n></connect></tile></ent><ent><xy><x>2</x><y>1</y></xy><tile><connect><n>2</n><n>5</n></connect><connect><n>3</n><n>1</n></connect><connect><n>4</n><n>0</n></connect><connect><n>6</n><n>7</n></connect></tile></ent><ent><xy><x>3</x><y>0</y></xy><tile><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>6</n></connect><connect><n>5</n><n>0</n></connect><connect><n>7</n><n>1</n></connect></tile></ent><ent><xy><x>3</x><y>1</y></xy><tile><connect><n>0</n><n>2</n></connect><connect><n>1</n><n>7</n></connect><connect><n>3</n><n>5</n></connect><connect><n>4</n><n>6</n></connect></tile></ent><ent><xy><x>4</x><y>0</y></xy><tile><connect><n>2</n><n>5</n></connect><connect><n>3</n><n>0</n></connect><connect><n>4</n><n>7</n></connect><connect><n>6</n><n>1</n></connect></tile></ent><ent><xy><x>4</x><y>1</y></xy><tile><connect><n>0</n><n>6</n></connect><connect><n>1</n><n>3</n></connect><connect><n>2</n><n>5</n></connect><connect><n>4</n><n>7</n></connect></tile></ent></map>";
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xmlContent);
             XmlNode newNode = doc.DocumentElement;
@@ -204,9 +205,10 @@ namespace TsuroTheSecondTests
             // 3, 4, (0, 1, 2, 3 ,4 ,5 , 6, 7)
             Dictionary<(int, int), Tile> result = parser.TilesXML(newNode);
             Tile ans_tile = new Tile(1, new List<int>{ 0, 1, 2, 3, 4, 5, 6, 7 });
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(1, result[(3, 4)].id);
-            Assert.IsTrue(ans_tile.CompareByPath(result[(3, 4)]));
+            Assert.AreEqual(9, result.Count);
+            //Assert.AreEqual(1, result.Count);
+            //Assert.AreEqual(1, result[(3, 4)].id);
+            //Assert.IsTrue(ans_tile.CompareByPath(result[(3, 4)]));
         }
         [TestMethod]
         public void TestParserTilesMulti()
@@ -353,7 +355,6 @@ namespace TsuroTheSecondTests
             Parser parser = new Parser();
             HashSet<Tile> result = parser.SetofTilesXML(newNode);
             Assert.AreEqual(2, result.Count);
-
         }
 
         [TestMethod]
@@ -430,6 +431,29 @@ namespace TsuroTheSecondTests
             {
                 Assert.AreEqual(i, nums[i - 1]);
             }
+        }
+
+        [TestMethod]
+        public void TestParserPlayTurnError()
+        {
+            string playturn = "<play-turn><board><map><ent><xy><x>0</x><y>0</y></xy><tile><connect><n>0</n><n>5</n></connect><connect><n>1</n><n>6</n></connect><connect><n>2</n><n>7</n></connect><connect><n>3</n><n>4</n></connect></tile></ent><ent><xy><x>0</x><y>1</y></xy><tile><connect><n>6</n><n>5</n></connect><connect><n>7</n><n>3</n></connect><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>4</n></connect></tile></ent><ent><xy><x>0</x><y>2</y></xy><tile><connect><n>2</n><n>5</n></connect><connect><n>3</n><n>1</n></connect><connect><n>4</n><n>0</n></connect><connect><n>6</n><n>7</n></connect></tile></ent><ent><xy><x>1</x><y>0</y></xy><tile><connect><n>6</n><n>4</n></connect><connect><n>7</n><n>1</n></connect><connect><n>0</n><n>3</n></connect><connect><n>2</n><n>5</n></connect></tile></ent><ent><xy><x>1</x><y>1</y></xy><tile><connect><n>2</n><n>1</n></connect><connect><n>3</n><n>0</n></connect><connect><n>4</n><n>7</n></connect><connect><n>5</n><n>6</n></connect></tile></ent><ent><xy><x>1</x><y>2</y></xy><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>7</n></connect><connect><n>3</n><n>6</n></connect></tile></ent><ent><xy><x>1</x><y>3</y></xy><tile><connect><n>6</n><n>0</n></connect><connect><n>7</n><n>2</n></connect><connect><n>1</n><n>5</n></connect><connect><n>3</n><n>4</n></connect></tile></ent><ent><xy><x>1</x><y>4</y></xy><tile><connect><n>6</n><n>0</n></connect><connect><n>7</n><n>5</n></connect><connect><n>1</n><n>3</n></connect><connect><n>2</n><n>4</n></connect></tile></ent><ent><xy><x>2</x><y>0</y></xy><tile><connect><n>0</n><n>4</n></connect><connect><n>1</n><n>7</n></connect><connect><n>2</n><n>3</n></connect><connect><n>5</n><n>6</n></connect></tile></ent><ent><xy><x>2</x><y>1</y></xy><tile><connect><n>4</n><n>0</n></connect><connect><n>5</n><n>7</n></connect><connect><n>6</n><n>2</n></connect><connect><n>1</n><n>3</n></connect></tile></ent><ent><xy><x>2</x><y>2</y></xy><tile><connect><n>0</n><n>5</n></connect><connect><n>1</n><n>3</n></connect><connect><n>2</n><n>6</n></connect><connect><n>4</n><n>7</n></connect></tile></ent><ent><xy><x>2</x><y>3</y></xy><tile><connect><n>6</n><n>0</n></connect><connect><n>7</n><n>5</n></connect><connect><n>1</n><n>2</n></connect><connect><n>3</n><n>4</n></connect></tile></ent><ent><xy><x>2</x><y>4</y></xy><tile><connect><n>2</n><n>1</n></connect><connect><n>3</n><n>5</n></connect><connect><n>4</n><n>7</n></connect><connect><n>6</n><n>0</n></connect></tile></ent><ent><xy><x>2</x><y>5</y></xy><tile><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>1</n></connect><connect><n>5</n><n>7</n></connect><connect><n>6</n><n>0</n></connect></tile></ent><ent><xy><x>3</x><y>0</y></xy><tile><connect><n>2</n><n>6</n></connect><connect><n>3</n><n>7</n></connect><connect><n>4</n><n>0</n></connect><connect><n>5</n><n>1</n></connect></tile></ent><ent><xy><x>3</x><y>1</y></xy><tile><connect><n>6</n><n>7</n></connect><connect><n>0</n><n>2</n></connect><connect><n>1</n><n>3</n></connect><connect><n>4</n><n>5</n></connect></tile></ent><ent><xy><x>3</x><y>2</y></xy><tile><connect><n>0</n><n>6</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>4</n></connect><connect><n>3</n><n>7</n></connect></tile></ent><ent><xy><x>3</x><y>3</y></xy><tile><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>7</n></connect><connect><n>5</n><n>0</n></connect><connect><n>6</n><n>1</n></connect></tile></ent><ent><xy><x>3</x><y>4</y></xy><tile><connect><n>4</n><n>6</n></connect><connect><n>5</n><n>7</n></connect><connect><n>0</n><n>2</n></connect><connect><n>1</n><n>3</n></connect></tile></ent><ent><xy><x>3</x><y>5</y></xy><tile><connect><n>6</n><n>0</n></connect><connect><n>7</n><n>2</n></connect><connect><n>1</n><n>4</n></connect><connect><n>3</n><n>5</n></connect></tile></ent><ent><xy><x>4</x><y>0</y></xy><tile><connect><n>6</n><n>0</n></connect><connect><n>7</n><n>4</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>3</n></connect></tile></ent><ent><xy><x>4</x><y>1</y></xy><tile><connect><n>0</n><n>7</n></connect><connect><n>1</n><n>2</n></connect><connect><n>3</n><n>4</n></connect><connect><n>5</n><n>6</n></connect></tile></ent><ent><xy><x>4</x><y>2</y></xy><tile><connect><n>0</n><n>7</n></connect><connect><n>1</n><n>6</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect></tile></ent><ent><xy><x>4</x><y>4</y></xy><tile><connect><n>6</n><n>7</n></connect><connect><n>0</n><n>5</n></connect><connect><n>1</n><n>4</n></connect><connect><n>2</n><n>3</n></connect></tile></ent><ent><xy><x>5</x><y>1</y></xy><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>3</n></connect><connect><n>4</n><n>5</n></connect><connect><n>6</n><n>7</n></connect></tile></ent></map><map><ent><color>blue</color><pawn-loc><v></v><n>1</n><n>6</n></pawn-loc></ent><ent><color>green</color><pawn-loc><h></h><n>3</n><n>0</n></pawn-loc></ent><ent><color>hotpink</color><pawn-loc><h></h><n>0</n><n>5</n></pawn-loc></ent><ent><color>red</color><pawn-loc><v></v><n>4</n><n>10</n></pawn-loc></ent><ent><color>purple</color><pawn-loc><v></v><n>1</n><n>7</n></pawn-loc></ent></map></board><set><tile><connect><n>4</n><n>0</n></connect><connect><n>5</n><n>7</n></connect><connect><n>6</n><n>3</n></connect><connect><n>1</n><n>2</n></connect></tile><tile><connect><n>0</n><n>3</n></connect><connect><n>1</n><n>5</n></connect><connect><n>2</n><n>6</n></connect><connect><n>4</n><n>7</n></connect></tile><tile><connect><n>4</n><n>7</n></connect><connect><n>5</n><n>1</n></connect><connect><n>6</n><n>3</n></connect><connect><n>0</n><n>2</n></connect></tile></set><n>0</n></play-turn>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(playturn);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> tokenPosition, HashSet<Tile> SetofTiles, List<int> nums) = parser.PlayTurnXML(newNode);
+        
+        }
+        [TestMethod]
+        public void TestParserPawnsError()
+        {
+            string pawns = "<map><ent><color>blue</color><pawn-loc><h></h><n>0</n><n>3</n></pawn-loc></ent><ent><color>green</color><pawn-loc><h></h><n>4</n><n>5</n></pawn-loc></ent><ent><color>hotpink</color><pawn-loc><h></h><n>6</n><n>5</n></pawn-loc></ent><ent><color>red</color><pawn-loc><v></v><n>2</n><n>10</n></pawn-loc></ent><ent><color>purple</color><pawn-loc><h></h><n>5</n><n>2</n></pawn-loc></ent></map>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(pawns);
+            XmlNode newNode = doc.DocumentElement;
+            Parser parser = new Parser();
+            Dictionary<string, (Position, Position)> result = parser.PawnsXML(newNode);
+            Assert.AreEqual(5, result.Count);
         }
 
 

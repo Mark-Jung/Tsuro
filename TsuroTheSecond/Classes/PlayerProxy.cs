@@ -17,6 +17,9 @@ namespace TsuroTheSecond
         public List<Tile> Hand;
         public IPlayer iplayer;
         public NetworkRelay networkRelay;
+        public bool GameFinished;
+        public Socket sender;
+        public NetworkStream networkStream;
 
         public PlayerProxy(IPlayer p, string c, int port)
         {
@@ -29,17 +32,18 @@ namespace TsuroTheSecond
             Color = c;
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[0];
-            Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp );
+            sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp );
             Console.WriteLine("Made another socket for proxy player");
             IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);  
             // Connect the socket to the remote endpoint. Catch any errors.  
             sender.Connect(remoteEP);
             Console.WriteLine("Connected to the endpoint, which is: " + remoteEP.ToString());
-            NetworkStream networkStream = new NetworkStream(sender);
+            networkStream = new NetworkStream(sender);
             StreamWriter writer = new StreamWriter(networkStream);
             StreamReader reader = new StreamReader(networkStream);
             networkRelay = new NetworkRelay(writer, reader);
             Console.WriteLine("Got the streams set up for proxy player");
+            GameFinished = false;
         }
 
         public void Play()
@@ -47,15 +51,21 @@ namespace TsuroTheSecond
             XmlNode command = networkRelay.ListenForMe();
             XmlNode answer = Identifier(command);
             networkRelay.WriteForMe(answer.OuterXml);
+            if(this.GameFinished){
+                networkRelay.CloseMe();
+                networkStream.Close();
+                sender.Close();
+            }
+
         }
 
         public XmlNode Identifier(XmlNode node)         {
             string command = parser.GetCommand(node);             switch (command)             {                 case "get-name":                     return wrapper.GetName(this);                 case "initialize":                     return wrapper.Initialize(this, node);                 case "place-pawn":                     return wrapper.PlacePawn(this, node);
                 case "play-turn":
-                    Console.WriteLine("Going to play turn!");
+                    //Console.WriteLine("Going to play turn!");
                     return wrapper.PlayTurn(this, node);
                 case "end-game":
-                    networkRelay.CloseMe();
+                    this.GameFinished = true;
                     return wrapper.EndGame(this, node);
 
                 default:                     throw new ArgumentException("Invalid Command Received");             }         } 

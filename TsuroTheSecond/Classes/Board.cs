@@ -30,9 +30,11 @@ namespace TsuroTheSecond
 
         public void PlaceTile(Tile tile, int x, int y)
         {
+            //Console.WriteLine(x + "::" + y);
             if (x < 0 || x > 5 || y < 0 || y > 5) {
                 throw new ArgumentException("Tile placement is out of board range");
             }
+
 
             this.tiles[x][y] = tile;
         }
@@ -83,16 +85,16 @@ namespace TsuroTheSecond
             // checks if placing a tile on the board will kill the player 
             Boolean playerAlive = true;
             var origNext = this.ReturnNextSpot(color);
-            Console.WriteLine("Next spot for the player is x: " + origNext.Item1 + " y: " + origNext.Item2);
+            //Console.WriteLine("Next spot for the player is x: " + origNext.Item1 + " y: " + origNext.Item2);
             Position origPosition = new Position(this.ReturnPlayerSpot(color));
             try{
                 this.PlaceTile(tile, origNext.Item1, origNext.Item2);
             } catch(ArgumentException){
                 return false;
             }
-            Console.WriteLine("Placed Tile");
+            //Console.WriteLine("Placed Tile");
             this.MovePlayer(color);
-            Console.WriteLine("Moved player");
+            //Console.WriteLine("Moved player");
 
 
             //playerAlive = !player.IsDead();
@@ -100,7 +102,7 @@ namespace TsuroTheSecond
 
             // undoing changes to the board
             this.PlaceTile(null, origNext.Item1, origNext.Item2);
-            Console.WriteLine("Undid changes!");
+            //Console.WriteLine("Undid changes!");
 
             this.tokenPositions[color].x = origPosition.x;
             this.tokenPositions[color].y = origPosition.y;
@@ -111,18 +113,17 @@ namespace TsuroTheSecond
         public List<Tile> AllPossibleTiles(string color, List<Tile> hands) {
             List<Tile> legal = new List<Tile>();
             List<Tile> illegal = new List<Tile>();
-            Console.WriteLine("Endtered AllPossibleTiles for color: " + color);
+            //Console.WriteLine("Entered AllPossibleTiles for color: " + color);
 
             int hand_size = hands.Count;
-            Console.WriteLine("Hand size: " + hand_size);
+            //Console.WriteLine("Hand size: " + hand_size);
             for (int i = 0; i < hand_size; i++) {
                 for (int j = 0; j < 4; j++) {
                     Tile tile = new Tile(hands[i]);
                     for (int k = 0; k < j; k++) {
                         tile.Rotate(); 
                     }
-                    Console.WriteLine("Rotataed " + j + "times!");
-                    Console.WriteLine("is it valid?");
+                    //Console.WriteLine("Rotated " + j + "times!");
                     if (this.ValidTilePlacement(color, tile)) {
                         legal.Add(tile);
                     } else {
@@ -130,12 +131,14 @@ namespace TsuroTheSecond
                     }
                 }
             }
-            Console.WriteLine("done sorting out the legal illegal tiles");
+            //Console.WriteLine("done sorting out the legal illegal tiles");
             // if none of the options are legal, return all illegal options
             //Console.WriteLine("legal count: " + legal.Count.ToString());
             if(legal.Count > 0){
+                //Console.WriteLine("returning legal!");
                 return legal;
             } else {
+                //Console.WriteLine("returning illegal! :: " + illegal.Count);
                 return illegal;
             }
         }

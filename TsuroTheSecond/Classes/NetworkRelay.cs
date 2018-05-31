@@ -13,7 +13,6 @@ namespace TsuroTheSecond
     {
         public StreamWriter writer;
         public StreamReader reader;
-        public NetworkStream networkStream;
         public Socket handler;
         public NetworkRelay(StreamWriter _writer, StreamReader _reader)
         {
@@ -23,6 +22,7 @@ namespace TsuroTheSecond
         }
         public XmlNode SingleRelay (string output)
         {
+            //Console.WriteLine(output);
             writer.WriteLine(output);
             writer.Flush();
             string answer = reader.ReadLine();
@@ -35,15 +35,13 @@ namespace TsuroTheSecond
         public void CloseMe()
         {
             writer.Close();
-            networkStream.Close();
             reader.Close();
-            handler.Shutdown(SocketShutdown.Both);  
-            handler.Close();  
         }
 
         public XmlNode ListenForMe()
         {
             string answer = reader.ReadLine();
+            //Console.WriteLine(answer);
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(answer);
             XmlNode newNode = doc.DocumentElement;
