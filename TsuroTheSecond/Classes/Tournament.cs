@@ -130,11 +130,11 @@ namespace TsuroTheSecond
                 {
                     foreach (Player victor in Victors)
                     {
-                        if (!WinnerCount.ContainsKey(victor.Color))
+                        if (!WinnerCount.ContainsKey(victor.iplayer.GetName()))
                         {
-                            WinnerCount.Add(victor.Color, 0);
+                            WinnerCount.Add(victor.iplayer.GetName(), 0);
                         }
-                        WinnerCount[victor.Color]++;
+                        WinnerCount[victor.iplayer.GetName()]++;
                     }
                     server.WinGame(Victors);
                     // mutex cnt;
@@ -149,10 +149,9 @@ namespace TsuroTheSecond
             {
                 Console.WriteLine("Got 2 args so running player mode!");
                 Tournament tournament_player = new Tournament();
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     tournament_player.ProxyPlay(args[0], args[1], tournament_player.port);
-                    Thread.Sleep(1000);
                 }
                 Console.WriteLine("\n");
                 Console.WriteLine("\n");
@@ -182,7 +181,7 @@ namespace TsuroTheSecond
                 tournament.socket.Listen(10);
 
                 // game loop
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     tournament.Play();
                 }

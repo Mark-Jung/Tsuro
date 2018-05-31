@@ -77,16 +77,8 @@ namespace TsuroTheSecond
             playerState = State.end;
             if (board.IsDead(this.color))
             {
-                Console.WriteLine("You Win!!");
+                Console.WriteLine("You Lost!!");
             }
-            //if (colors.Contains(color))
-            //{
-            //    Console.WriteLine("You win!");
-            //}
-            //else
-            //{
-            //    Console.WriteLine("You lose!");
-            //}
         }
 
         public Tile PlayTurn(Board board, List<Tile> hand, int unused)

@@ -283,11 +283,19 @@ namespace TsuroTheSecond
                 }
             }
             //Console.WriteLine("Moved " + currentPlayer.Color + " to the end of alive!");
+            int tilecount = 0;
+            foreach(List<Tile> row in board.tiles){
+                foreach(Tile each in row){
+                    if(each != null){
+                        tilecount++;
+                    }
+                }
+            }
 
             Boolean GameDone = false;
             List<Player> Victors = new List<Player>();
 
-            if (alive.Count == 1)
+            if (alive.Count == 1 || tilecount == 35)
             {
                 Console.WriteLine("GG!");
                 GameDone = true;
@@ -345,6 +353,10 @@ namespace TsuroTheSecond
                 Console.WriteLine(each.Color);
             }
             foreach (Player each in dead)
+            {
+                each.iplayer.EndGame(board, winner_colors);
+            }
+            foreach (Player each in alive)
             {
                 each.iplayer.EndGame(board, winner_colors);
             }
