@@ -21,7 +21,7 @@ namespace TsuroTheSecond
         public Socket sender;
         public NetworkStream networkStream;
 
-        public PlayerProxy(IPlayer p, string c, int port)
+        public PlayerProxy(IPlayer p, string c, IPAddress iPEndPoint, int port)
         {
             if (!Constants.colors.Contains(c))
             {
@@ -34,7 +34,7 @@ namespace TsuroTheSecond
             IPAddress ipAddress = ipHostInfo.AddressList[0];
             sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp );
             Console.WriteLine("Made another socket for proxy player");
-            IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);  
+            IPEndPoint remoteEP = new IPEndPoint(iPEndPoint, port);  
             // Connect the socket to the remote endpoint. Catch any errors.  
             sender.Connect(remoteEP);
             Console.WriteLine("Connected to the endpoint, which is: " + remoteEP.ToString());

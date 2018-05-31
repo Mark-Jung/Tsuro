@@ -31,9 +31,9 @@ namespace TsuroTheSecondTests
             leastSymmetricPlayer= new LeastSymmetricPlayer("reggie");
             mostSymmetricPlayer= new MostSymmetricPlayer("michael");
 
-            randBlue = new PlayerProxy(randomPlayer, "blue", 9999);
-            mostsymRed = new PlayerProxy(mostSymmetricPlayer, "red", 9999);
-            leastsymRed = new PlayerProxy(leastSymmetricPlayer, "red", 9999);
+            //randBlue = new PlayerProxy(randomPlayer, "blue", 9999);
+            //mostsymRed = new PlayerProxy(mostSymmetricPlayer, "red", 9999);
+            //leastsymRed = new PlayerProxy(leastSymmetricPlayer, "red", 9999);
 
 
             tiles = new List<Tile>{
