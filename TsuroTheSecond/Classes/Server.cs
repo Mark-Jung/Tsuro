@@ -370,7 +370,7 @@ namespace TsuroTheSecond
             {
                 throw new InvalidOperationException("Player can't have more than 3 cards in hand");
             }
-            Console.WriteLine("Deck size is: " + d.Count);
+            //Console.WriteLine("Deck size is: " + d.Count);
 
             if (d.Count <= 0)
             {
@@ -382,8 +382,8 @@ namespace TsuroTheSecond
                 Tile t = d[0];
                 d.RemoveAt(0);
                 player.AddTiletoHand(t);
-                Console.WriteLine("Player " + player.Color + " drew Tile!");
-                t.PrintMe();
+                //Console.WriteLine("Player " + player.Color + " drew Tile!");
+                //t.PrintMe();
             }
         }
     }

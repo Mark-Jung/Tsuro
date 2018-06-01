@@ -10,12 +10,11 @@ namespace TsuroTheSecond
         protected string name;
         string color;
         protected List<string> player_colors;
-        public enum State { start, initialized, loop, end };
+        public enum State { initialized, loop, end };
         public State playerState;
 
         public MostSymmetricPlayer(string _name)
         {
-            playerState = State.start;
             name = _name;
         }
 
@@ -36,10 +35,6 @@ namespace TsuroTheSecond
 
         public void Initialize(string _color, List<string> all_colors)
         {
-            if (playerState != State.start)
-            {
-                throw new Exception("Player should be in start state");
-            }
             color = _color;
             player_colors = all_colors;
             playerState = State.initialized;
@@ -78,7 +73,10 @@ namespace TsuroTheSecond
             if (board.IsDead(this.color))
             {
                 Console.WriteLine("You Lost!!");
+            } else{
+                Console.WriteLine("You Win!!");
             }
+
         }
 
         public Tile PlayTurn(Board board, List<Tile> hand, int unused)

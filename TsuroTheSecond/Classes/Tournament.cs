@@ -157,7 +157,26 @@ namespace TsuroTheSecond
         }
         static void Main(string[] args)
         {
-            if(args[0] == "player")
+            if(args.Length == 0){
+                Tournament tournament_player = new Tournament();
+                string name = "Mark";
+                string color = "blue";
+                tournament_player.toPlay = 1000;
+                tournament_player.port = 12345;
+
+                IPAddress ip;
+                IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+                IPAddress ipAddress = ipHostInfo.AddressList[0];
+                ip = ipAddress;
+                //arg[0] name
+                //arg[1] color
+                //arg[2] portnumber
+                for (int i = 0; i < tournament_player.toPlay; i++)
+                {
+                    tournament_player.ProxyPlay(name, color, ip, tournament_player.port);
+                }
+            }
+            else if(args[0] == "player")
             {
                 
                 Console.WriteLine("Running player mode!");
@@ -197,7 +216,7 @@ namespace TsuroTheSecond
                 //arg[2] portnumber
                 for (int i = 0; i < tournament_player.toPlay; i++)
                 {
-                    tournament_player.ProxyPlay(args[1], args[2], ip, tournament_player.port);
+                    tournament_player.ProxyPlay(name, color, ip, tournament_player.port);
                 }
                 Console.WriteLine("\n");
                 Console.WriteLine("\n");
