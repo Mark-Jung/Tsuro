@@ -21,26 +21,27 @@ namespace TsuroTheSecond
         public Socket sender;
         public NetworkStream networkStream;
 
-        public PlayerProxy(IPlayer p, string c, IPAddress iPEndPoint, int port)
+        //public PlayerProxy(IPlayer p, string c, IPAddress iPEndPoint, int port)
+        public PlayerProxy(IPlayer player, string c, StreamWriter writer, StreamReader reader)
         {
             if (!Constants.colors.Contains(c))
             {
                 throw new ArgumentException("Color not allowed");
             }
             Hand = new List<Tile>();
-            iplayer = p;
+            iplayer = player;
             Color = c;
-            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp );
-            Console.WriteLine("Made another socket for proxy player");
-            IPEndPoint remoteEP = new IPEndPoint(iPEndPoint, port);  
-            // Connect the socket to the remote endpoint. Catch any errors.  
-            sender.Connect(remoteEP);
-            Console.WriteLine("Connected to the endpoint, which is: " + remoteEP.ToString());
-            networkStream = new NetworkStream(sender);
-            StreamWriter writer = new StreamWriter(networkStream);
-            StreamReader reader = new StreamReader(networkStream);
+            //IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            //IPAddress ipAddress = ipHostInfo.AddressList[0];
+            //sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            //Console.WriteLine("Made another socket for proxy player");
+            //IPEndPoint remoteEP = new IPEndPoint(iPEndPoint, port);
+            //// Connect the socket to the remote endpoint. Catch any errors.  
+            //sender.Connect(remoteEP);
+            //Console.WriteLine("Connected to the endpoint, which is: " + remoteEP.ToString());
+            //networkStream = new NetworkStream(sender);
+            //StreamWriter writer = new StreamWriter(networkStream);
+            //StreamReader reader = new StreamReader(networkStream);
             networkRelay = new NetworkRelay(writer, reader);
             Console.WriteLine("Got the streams set up for proxy player");
             GameFinished = false;
@@ -51,11 +52,9 @@ namespace TsuroTheSecond
             XmlNode command = networkRelay.ListenForMe();
             XmlNode answer = Identifier(command);
             networkRelay.WriteForMe(answer.OuterXml);
-            if(this.GameFinished){
-                networkRelay.CloseMe();
-                networkStream.Close();
-                sender.Close();
-            }
+            //if(this.GameFinished){
+            //    networkRelay.CloseMe();
+            //}
 
         }
 
