@@ -18,7 +18,7 @@ namespace TsuroTheSecond
 
         public Server() {
             gameState = State.start;
-            Console.WriteLine("Starting game with state: start");
+            //Console.WriteLine("Starting game with state: start");
             // initializes the game
             dragonQueue = new List<Player>();
             deck = ShuffleDeck(Constants.tiles);
@@ -103,18 +103,18 @@ namespace TsuroTheSecond
                     position = p.iplayer.PlacePawn(this.board);
                 }catch (ArgumentException)
                 {
-                    Console.WriteLine("Player initialized invalid position and has been replaced");
+                    //Console.WriteLine("Player initialized invalid position and has been replaced");
                     ReplacePlayer(p);
                 }
-                Console.WriteLine("Initialized player: " + p.Color);
+                //Console.WriteLine("Initialized player: " + p.Color);
                 this.board.AddPlayerToken(p.Color, position);
                 // initialize hand
-                Console.WriteLine("Initial Tile draw: ");
+                //Console.WriteLine("Initial Tile draw: ");
                 this.DrawTile(p, deck);
                 this.DrawTile(p, deck);
                 this.DrawTile(p, deck);
-                Console.WriteLine("\n");
-                Console.WriteLine("\n");
+                //Console.WriteLine("\n");
+                //Console.WriteLine("\n");
             }
 
         }
@@ -297,13 +297,13 @@ namespace TsuroTheSecond
 
             if (alive.Count == 1 || tilecount == 35)
             {
-                Console.WriteLine("GG!");
+                //Console.WriteLine("GG!");
                 GameDone = true;
                 Victors.AddRange(alive);
             }
             else if (alive.Count == 0)
             {
-                Console.WriteLine("GG! Multiple Winners!");
+                //Console.WriteLine("GG! Multiple Winners!");
                 GameDone = true;
                 Victors.AddRange(fatalities);
             }
@@ -326,7 +326,7 @@ namespace TsuroTheSecond
             if (player.Hand.Count > 0) {
                 deck.AddRange(player.Hand);
                 int dragonqueueCount = dragonQueue.Count;
-                Console.WriteLine("Dragon Queue size: " + dragonQueue.Count);
+                //Console.WriteLine("Dragon Queue size: " + dragonQueue.Count);
 
 
                 //Console.WriteLine("Giving " + dragonQueue[0].iplayer.GetName() + " priority for dragon tile!");
@@ -344,13 +344,13 @@ namespace TsuroTheSecond
         }
 
         public void WinGame(List<Player> winners) {
-            Console.WriteLine("Seems like there are " + winners.Count + "winners!");
-            Console.WriteLine("The champion(s) is(are)...");
+            //Console.WriteLine("Seems like there are " + winners.Count + "winners!");
+            //Console.WriteLine("The champion(s) is(are)...");
             List<string> winner_colors = new List<string>();
 
             foreach(Player each in winners){
                 winner_colors.Add(each.Color);
-                Console.WriteLine(each.Color);
+                //Console.WriteLine(each.Color);
             }
             foreach (Player each in dead)
             {
