@@ -182,7 +182,7 @@ namespace TsuroTheSecond
             Console.WriteLine("port: " + this.port);
         }
         public bool IsDead(){
-            return (this.x < 0 || x > 5 || y < 0 || y > 5);
+            return (x < 0 || x > 5 || y < 0 || y > 5);
         }
 
     }
