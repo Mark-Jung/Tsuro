@@ -48,18 +48,59 @@ namespace TsuroTheSecond
                 (Dictionary<(int, int), Tile> TilesTobePlaced, Dictionary<string, (Position, Position)> TokenPositions) = parser.BoardXML(in_board);
                 Tile tile_toplay = parser.TileXML(_tile);
 
+                int dragon_index = -1;
+                int cnt = 0;
+                // alive
                 foreach (KeyValuePair<string, (List<Tile>, Boolean)> entry in alive_incomplete)
                 {
                     Player player = new Player(new MostSymmetricPlayer(entry.Key), entry.Key);
                     player.Hand = entry.Value.Item1;
                     if (entry.Value.Item2)
                     {
-                        server.dragonQueue.Add(player);
+                        dragon_index = cnt;
                     }
                     server.alive.Add(player);
+                    cnt++;
+                }
+                // populate server dragon queue
+                // 1. add less than 3 cards holders AFTER the dragon holder
+                // 2. add less than 3 cards holders BEFORE the dragon holder
+                // edge case: 
+                // the first player is the dragon holder. -> Divide it into 
+                // 3 big cases.
+                /* 1. from the found dragon holder(including) to the end. 
+                 *    include underpopulated hands
+                 * 2. check if the first hand is underpopulated(2). 
+                 *    special since it is expected to have 2, not 3. However,
+                 *    this first element cannot be the dragon holder(double count with 1.)
+                 * 3. from index 1 to the dragon holder index.
+                 */      
+                if(dragon_index >= 0)
+                {
+                    for (int i = dragon_index; i < server.alive.Count; i++)
+                    {
+                        if (server.alive[i].Hand.Count < 3)
+                        {
+                            server.dragonQueue.Add(server.alive[i]);
+                        }
+                    }
+
+                    if(server.alive[0].Hand.Count < 2 && dragon_index != 0)
+                    {
+                        
+                    }
+
+                    for (int i = 1; i < dragon_index; i++)
+                    {
+                        if (server.alive[i].Hand.Count < 3)
+                        {
+                            server.dragonQueue.Add(server.alive[i]);
+                        }
+                    }
                 }
 
-                // alive
+
+                // dead
                 foreach (KeyValuePair<string, (List<Tile>, Boolean)> entry in dead_incomplete)
                 {
                     Player player = new Player(new MostSymmetricPlayer(entry.Key), entry.Key);
@@ -67,7 +108,6 @@ namespace TsuroTheSecond
                     server.dead.Add(player);
                 }
 
-                // dead
                 foreach (KeyValuePair<(int, int), Tile> entry in TilesTobePlaced)
                 {
                     server.board.PlaceTile(entry.Value, entry.Key.Item1, entry.Key.Item2);

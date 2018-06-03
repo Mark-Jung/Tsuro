@@ -351,17 +351,15 @@ namespace TsuroTheSecond
             Boolean GameDone = false;
             List<Player> Victors = new List<Player>();
 
-            if (alive.Count == 1 || tilecount == 35)
+            if(alive.Count == 0)
             {
-                //Console.WriteLine("GG!");
-                GameDone = true;
-                Victors.AddRange(alive);
-            }
-            else if (alive.Count == 0)
-            {
-                //Console.WriteLine("GG! Multiple Winners!");
                 GameDone = true;
                 Victors.AddRange(fatalities);
+            }
+            else if(alive.Count == 1 || (alive.Count > 1 && tilecount == 35))
+            {
+                GameDone = true;
+                Victors.AddRange(alive);
             }
 
             return (deck, alive, dead, board, GameDone, Victors);
@@ -391,7 +389,7 @@ namespace TsuroTheSecond
 
 
                 //Console.WriteLine("Giving " + dragonQueue[0].iplayer.GetName() + " priority for dragon tile!");
-                for (int i = 0; i < dragonqueueCount; i++)
+                for (int i = 0; (i < dragonqueueCount && deck.Count > 0); i++)
                 {
                     DrawTile(dragonQueue[0], deck);
                     //Console.WriteLine("Removing player " + dragonQueue[0].Color + " from the dragon queue");
@@ -444,6 +442,9 @@ namespace TsuroTheSecond
                 player.AddTiletoHand(t);
                 //Console.WriteLine("Player " + player.Color + " drew Tile!");
                 //t.PrintMe();
+                if(player.Hand.Count < 3){
+                    dragonQueue.Add(player);
+                }
             }
         }
     }
