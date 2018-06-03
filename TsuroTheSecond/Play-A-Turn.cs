@@ -87,7 +87,7 @@ namespace TsuroTheSecond
 
                     if(server.alive[0].Hand.Count < 2 && dragon_index != 0)
                     {
-                        
+                        server.dragonQueue.Add(server.alive[0]);
                     }
 
                     for (int i = 1; i < dragon_index; i++)

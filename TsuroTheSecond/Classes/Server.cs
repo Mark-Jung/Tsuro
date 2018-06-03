@@ -333,7 +333,7 @@ namespace TsuroTheSecond
                     isDead = true;
                 }
             }
-            if (!isDead)
+            if (!isDead && dragonQueue.Count == 0 && currentPlayer.Hand.Count < 3)
             {
                 DrawTile(currentPlayer, deck);
             }
