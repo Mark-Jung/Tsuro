@@ -2,7 +2,7 @@ Mark Jung - gujung2022@u.northwestern.edu
 Vinay Patel - vinaypatel2018@u.northwestern.edu
 
 # How to run Play-A-Turn
-
+run ./myplay-a-turn.sh
 
 # How to run tournament
 First, navigate to stored_directory/TsuroTheSecond/bin/Debug/netcoreapp2.1
