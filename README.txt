@@ -1,6 +1,9 @@
 Mark Jung - gujung2022@u.northwestern.edu
 Vinay Patel - vinaypatel2018@u.northwestern.edu
 
+# How to run Play-A-Turn
+
+
 # How to run tournament
 First, navigate to stored_directory/TsuroTheSecond/bin/Debug/netcoreapp2.1
 Run this command: dotnet TsuroTheSecond.dll server <port_number/> <number of games to play/> <number_of_network_players/> <number_of_total_players/>

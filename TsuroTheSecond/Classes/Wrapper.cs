@@ -92,11 +92,13 @@ namespace TsuroTheSecond
                     //Console.WriteLine("Juk el GAK!!");
                     //entry.Value.Item1.PrintMe();
                     board.tokenPositions[entry.Key] = entry.Value.Item1;
+                    board.initialPositions[entry.Key] = entry.Value.Item1;
                     continue;
                 } else if(entry.Value.Item2.IsDead()){
                     //Console.WriteLine("Juk el GAK!!");
-                    //entry.Value.Item2.PrintMe();
+                    //entry.Value.Item2.PrintMe();;
                     board.tokenPositions[entry.Key] = entry.Value.Item2;
+                    board.initialPositions[entry.Key] = entry.Value.Item2;
                     continue;
                 }
 
@@ -104,9 +106,11 @@ namespace TsuroTheSecond
                 if(board.tiles[entry.Value.Item1.x][entry.Value.Item1.y] is null){
                     //entry.Value.Item2.PrintMe();
                     board.tokenPositions[entry.Key] = entry.Value.Item2;
+                    board.initialPositions[entry.Key] = entry.Value.Item2;
                 } else {
                     //entry.Value.Item1.PrintMe();
                     board.tokenPositions[entry.Key] = entry.Value.Item1;
+                    board.initialPositions[entry.Key] = entry.Value.Item1;
                 }
             }
             return board;

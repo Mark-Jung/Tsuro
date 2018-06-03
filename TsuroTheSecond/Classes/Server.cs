@@ -185,15 +185,16 @@ namespace TsuroTheSecond
             return false;
         }
 
-        public (List<Tile>, List<Player>, List<Player>, Board, Boolean, List<Player>) PlayATurn(List<Tile> _deck, 
-                                                                                  List<Player> _alive, 
-                                                                                  List<Player> _dead, 
-                                                                                  Board _board, 
-                                                                                  Tile tile) 
+        public (List<Tile>, List<Player>, List<Player>, Board, Boolean, List<Player>) PlayATurn(List<Tile> _deck,
+                                                                                  List<Player> _alive,
+                                                                                  List<Player> _dead,
+                                                                                  Board _board,
+                                                                                  Tile tile)
 
         {
             //Console.WriteLine("In PlayATurn");
-            if (gameState != State.safe) {
+            if (gameState != State.safe)
+            {
                 throw new Exception("Invalid game state");
             }
             //Console.WriteLine("In valid game state");
@@ -201,17 +202,26 @@ namespace TsuroTheSecond
             gameState = State.loop;
 
             Player currentPlayer = this.alive[0];
+            Player dragonPlayer = null;
+            if(dragonQueue.Count > 0){
+                dragonPlayer = this.dragonQueue[0];
+            }
             //Console.WriteLine("The current player is " + currentPlayer.Color);
 
-            if (currentPlayer.Hand.Count > 2) {
+            if (currentPlayer.Hand.Count > 2)
+            {
                 throw new ArgumentException("Player should have 2 or less tiles in hand");
             }
 
             List<Tile> all_tiles = new List<Tile>();
-            foreach(Tile t in currentPlayer.Hand){
-                if(t.id != tile.id){
+            foreach (Tile t in currentPlayer.Hand)
+            {
+                if (t.id != tile.id)
+                {
                     all_tiles.Add(t);
-                } else {
+                }
+                else
+                {
                     throw new ArgumentException("Tile to be played can still be found in hand");
                 }
             }
@@ -219,23 +229,28 @@ namespace TsuroTheSecond
             //Console.WriteLine("Added all the tiles in hand!");
 
             int tileCount = 0;
-            foreach(List<Tile> row in board.tiles) {
-                foreach(Tile t in row) {
+            foreach (List<Tile> row in board.tiles)
+            {
+                foreach (Tile t in row)
+                {
                     if (t == null) { continue; }
-                    foreach(Tile dif_tile in all_tiles){
-                        if(t.id == dif_tile.id){
+                    foreach (Tile dif_tile in all_tiles)
+                    {
+                        if (t.id == dif_tile.id)
+                        {
                             throw new Exception("Tile to be played or in hand is already on board");
                         }
                     }
                     all_tiles.Add(t);
                     tileCount++;
-                } 
+                }
             }
             //Console.WriteLine("Checked if the tiles in hand are different from the ones on board!");
 
             int total = currentPlayer.Hand.Count + tileCount;
-            if (all_tiles.Count != total) {
-                
+            if (all_tiles.Count != total)
+            {
+
                 throw new ArgumentException("Tile to be placed, tiles in hand, and tiles on board are not unique");
             }
 
@@ -246,9 +261,11 @@ namespace TsuroTheSecond
 
             // consequence of moving
             List<Player> fatalities = new List<Player>();
-            foreach (Player p in alive) {
+            foreach (Player p in alive)
+            {
                 board.MovePlayer(p.Color);
-                if (board.IsDead(p.Color)) {
+                if (board.IsDead(p.Color))
+                {
                     fatalities.Add(p);
                 }
             }
@@ -260,29 +277,68 @@ namespace TsuroTheSecond
                 KillPlayer(p);
             }
 
-            // current player is dead, don't draw
-            bool isDead = false;
-            foreach (Player p in dead)
-            {
-                if(p.Color == currentPlayer.Color){
-                    isDead = true;
-                }
-            }
-            if(!isDead){
-                DrawTile(currentPlayer, deck);
-            }
-            //DrawTile(currentPlayer, deck);
-
             //Console.WriteLine("Moving " + currentPlayer.Color + " to the end of alive!");
             // put currentPlayer to end of _alive
-            for (int i = 0; i < alive.Count; i++){
-                if(alive[i].Color == currentPlayer.Color){
+            for (int i = 0; i < alive.Count; i++)
+            {
+                if (alive[i].Color == currentPlayer.Color)
+                {
                     Player move_to_end = alive[i];
                     alive.Remove(move_to_end);
                     alive.Add(move_to_end);
                 }
             }
-            //Console.WriteLine("Moved " + currentPlayer.Color + " to the end of alive!");
+
+            // redistribute card! This should be done in dragon queue but findler's representation doesn't allow that
+            // clockwise from the dragon player
+            //List<Player> nonfull_hands = new List<Player>();
+            //if(deck.Count > 0 && dragonPlayer != null){
+            //    int start = 0;
+            //    for (int i = 0; i < alive.Count; i++)
+            //    {
+            //        if (alive[i].Color == dragonPlayer.Color)
+            //        {
+            //            start = i;
+            //            break;
+            //        }
+            //    }
+            //    for (int i = start+1; i < alive.Count; i++){
+            //        if (alive[i].Hand.Count < 3){
+            //            nonfull_hands.Add(alive[i]);
+            //        }
+            //    }
+            //    for (int i = 0; i <= start; i++)
+            //    {
+            //        if (alive[i].Hand.Count < 3)
+            //        {
+            //            nonfull_hands.Add(alive[i]);
+            //        }
+            //    }
+            //    int j = 0;
+            //    while(deck.Count > 0)
+            //    {
+            //        DrawTile(nonfull_hands[j % nonfull_hands.Count], deck);
+            //        j++;
+            //    }
+                
+            //}
+
+
+            // current player is dead, don't draw
+            bool isDead = false;
+            foreach (Player p in dead)
+            {
+                if (p.Color == currentPlayer.Color)
+                {
+                    isDead = true;
+                }
+            }
+            if (!isDead)
+            {
+                DrawTile(currentPlayer, deck);
+            }
+
+            // check if 35 tiles have been placed.
             int tilecount = 0;
             foreach(List<Tile> row in board.tiles){
                 foreach(Tile each in row){
@@ -325,6 +381,11 @@ namespace TsuroTheSecond
             // distribute player hand to whoevers waiting in queue or just add to deck
             if (player.Hand.Count > 0) {
                 deck.AddRange(player.Hand);
+                int hand_cnt = player.Hand.Count;
+                for (int i = 0; i < hand_cnt; i++)
+                {
+                    player.RemoveTilefromHand(player.Hand[0]);
+                }
                 int dragonqueueCount = dragonQueue.Count;
                 //Console.WriteLine("Dragon Queue size: " + dragonQueue.Count);
 
@@ -339,7 +400,6 @@ namespace TsuroTheSecond
                 //DrawTile(dragonQueue[0], deck);
                 //dragonQueue.Remove(dragonQueue[0]);
                 //Console.WriteLine("Dragon Queue size: " + dragonQueue.Count);
-
             }
         }
 
