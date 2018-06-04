@@ -315,13 +315,13 @@ namespace TsuroTheSecond
                     Console.WriteLine(entry.Key + ": " + entry.Value);
                 }
             }
+            else if (args[0] == "play_a_turn") {
+                Play_A_Turn play_a_turn = new Play_A_Turn();
+                play_a_turn.play_a_turn();
+            }
             else {
                 Console.WriteLine("Invalid mode to run. Program closed.");  
             }
-            
-
         }
-
-
     }
 }
