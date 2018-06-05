@@ -115,9 +115,6 @@ namespace TsuroTheSecond
                 // board
                 server.board = wrapper.BoardBuilder(TilesTobePlaced, TokenPositions);
                 server.deck = deck;
-                //server.alive[0].RemoveTilefromHand(tile_toplay);
-
-
 
                 // run play-a-turn
                 (List<Tile> _deck, List<Player> _alive, List<Player> _dead, Board _board, Boolean GG, List<Player> victors) = server.PlayATurn(server.deck, server.alive, server.dead, server.board, tile_toplay);

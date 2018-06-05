@@ -150,38 +150,29 @@ namespace TsuroTheSecond
                 throw new Exception("Invalid game state");
             }
             gameState = State.safe;
-            //Console.WriteLine("Currently in LegalPlay, Server.cs");
-            //Console.WriteLine("game state is: safe");
-
 
             // Check for valid tile
             if (tile == null || !player.TileinHand(tile)) {
                 ReplacePlayer(player);
-                //Console.WriteLine("Player yielded an illegal tile and has been replaced");
                 return false;
             }
-            //Console.WriteLine("Tile is valid!");
 
             List<Tile> all_options = b.AllPossibleTiles(player.Color, player.Hand);
-            //Console.WriteLine("Got all the possible tiles!");
 
             // if there's no options that don't kill you, then any tile is legal
             if (all_options.Count == 0) {
                 return true;
             }
-            //Console.WriteLine("Has at least one valid option.");
 
             // try if the tile is in all_options
             // If so, return true
             foreach(Tile goodTile in all_options){
                 if(goodTile.id == tile.id){
-                    //Console.WriteLine("Got a valid matching Tile!");
                     return true;
                 }
             }
 
             ReplacePlayer(player);
-            //Console.WriteLine("Player has played an illegal tile and has been replaced");
             return false;
         }
 
@@ -192,12 +183,10 @@ namespace TsuroTheSecond
                                                                                   Tile tile)
 
         {
-            //Console.WriteLine("In PlayATurn");
             if (gameState != State.safe)
             {
                 throw new Exception("Invalid game state");
             }
-            //Console.WriteLine("In valid game state");
 
             gameState = State.loop;
 
@@ -206,7 +195,6 @@ namespace TsuroTheSecond
             if(dragonQueue.Count > 0){
                 dragonPlayer = this.dragonQueue[0];
             }
-            //Console.WriteLine("The current player is " + currentPlayer.Color);
 
             if (currentPlayer.Hand.Count > 2)
             {
@@ -225,8 +213,6 @@ namespace TsuroTheSecond
                     throw new ArgumentException("Tile to be played can still be found in hand");
                 }
             }
-
-            //Console.WriteLine("Added all the tiles in hand!");
 
             int tileCount = 0;
             foreach (List<Tile> row in board.tiles)
@@ -289,41 +275,6 @@ namespace TsuroTheSecond
                 }
             }
 
-            // redistribute card! This should be done in dragon queue but findler's representation doesn't allow that
-            // clockwise from the dragon player
-            //List<Player> nonfull_hands = new List<Player>();
-            //if(deck.Count > 0 && dragonPlayer != null){
-            //    int start = 0;
-            //    for (int i = 0; i < alive.Count; i++)
-            //    {
-            //        if (alive[i].Color == dragonPlayer.Color)
-            //        {
-            //            start = i;
-            //            break;
-            //        }
-            //    }
-            //    for (int i = start+1; i < alive.Count; i++){
-            //        if (alive[i].Hand.Count < 3){
-            //            nonfull_hands.Add(alive[i]);
-            //        }
-            //    }
-            //    for (int i = 0; i <= start; i++)
-            //    {
-            //        if (alive[i].Hand.Count < 3)
-            //        {
-            //            nonfull_hands.Add(alive[i]);
-            //        }
-            //    }
-            //    int j = 0;
-            //    while(deck.Count > 0)
-            //    {
-            //        DrawTile(nonfull_hands[j % nonfull_hands.Count], deck);
-            //        j++;
-            //    }
-                
-            //}
-
-
             // current player is dead, don't draw
             bool isDead = false;
             foreach (Player p in dead)
@@ -366,7 +317,6 @@ namespace TsuroTheSecond
         }
 
         public void KillPlayer(Player player) {
-            //Console.WriteLine("Killing Player " + player.Color);
             dead.Add(player);
             alive.Remove(player);
 
@@ -385,19 +335,12 @@ namespace TsuroTheSecond
                     player.RemoveTilefromHand(player.Hand[0]);
                 }
                 int dragonqueueCount = dragonQueue.Count;
-                //Console.WriteLine("Dragon Queue size: " + dragonQueue.Count);
 
-
-                //Console.WriteLine("Giving " + dragonQueue[0].iplayer.GetName() + " priority for dragon tile!");
                 for (int i = 0; (i < dragonqueueCount && deck.Count > 0); i++)
                 {
                     DrawTile(dragonQueue[0], deck);
-                    //Console.WriteLine("Removing player " + dragonQueue[0].Color + " from the dragon queue");
                     dragonQueue.Remove(dragonQueue[0]);
                 }
-                //DrawTile(dragonQueue[0], deck);
-                //dragonQueue.Remove(dragonQueue[0]);
-                //Console.WriteLine("Dragon Queue size: " + dragonQueue.Count);
             }
         }
 
@@ -423,7 +366,6 @@ namespace TsuroTheSecond
         public void DrawTile(Player player, List<Tile> d)
         {
             // how is this supposed to work with an interface?
-            //Console.WriteLine(d.Count);
             if (player.Hand.Count >= 3)
             {
                 throw new InvalidOperationException("Player can't have more than 3 cards in hand");
@@ -432,7 +374,6 @@ namespace TsuroTheSecond
 
             if (d.Count <= 0)
             {
-                //Console.WriteLine("The deck was empty so now adding player " + player.Color + " to the dragonQueue.");
                 this.dragonQueue.Add(player);
             }
             else
