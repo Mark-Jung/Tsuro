@@ -1,9 +1,6 @@
 # Contributing Authors
-
 Mark Jung - gujung2022@u.northwestern.edu
-
 Ethan Lee(prior parter)
-
 Vinay Patel - vinaypatel2018@u.northwestern.edu
 
 # How to run Play-A-Turn
