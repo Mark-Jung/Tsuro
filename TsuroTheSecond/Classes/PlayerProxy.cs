@@ -21,7 +21,6 @@ namespace TsuroTheSecond
         public Socket sender;
         public NetworkStream networkStream;
 
-        //public PlayerProxy(IPlayer p, string c, IPAddress iPEndPoint, int port)
         public PlayerProxy(IPlayer player, string c, StreamWriter writer, StreamReader reader)
         {
             if (!Constants.colors.Contains(c))
@@ -31,17 +30,7 @@ namespace TsuroTheSecond
             Hand = new List<Tile>();
             iplayer = player;
             Color = c;
-            //IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-            //IPAddress ipAddress = ipHostInfo.AddressList[0];
-            //sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            //Console.WriteLine("Made another socket for proxy player");
-            //IPEndPoint remoteEP = new IPEndPoint(iPEndPoint, port);
-            //// Connect the socket to the remote endpoint. Catch any errors.  
-            //sender.Connect(remoteEP);
-            //Console.WriteLine("Connected to the endpoint, which is: " + remoteEP.ToString());
-            //networkStream = new NetworkStream(sender);
-            //StreamWriter writer = new StreamWriter(networkStream);
-            //StreamReader reader = new StreamReader(networkStream);
+
             networkRelay = new NetworkRelay(writer, reader);
             Console.WriteLine("Got the streams set up for proxy player");
             GameFinished = false;
@@ -55,7 +44,6 @@ namespace TsuroTheSecond
             //if(this.GameFinished){
             //    networkRelay.CloseMe();
             //}
-
         }
 
         public XmlNode Identifier(XmlNode node)         {
