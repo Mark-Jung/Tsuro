@@ -96,11 +96,9 @@ namespace TsuroTheSecond
 
         public void JudgeSymmetric() {
             int sym;
-            List<Tile> rotatos = new List<Tile>();
             HashSet<string> rotatos_paths = new HashSet<string>();
             for (int i = 0; i < 4; i++) {
-                rotatos.Add(this);
-                rotatos_paths.Add(rotatos[i].PathMap());
+                rotatos_paths.Add(this.PathMap());
                 this.Rotate();
             }
             sym = rotatos_paths.Count;
@@ -120,15 +118,11 @@ namespace TsuroTheSecond
             Tile Copyofthis = new Tile(this);
             List<Tile> PossibleofThis = new List<Tile>();
             for (int i = 0; i < 4; i++) {
-                Tile LoopCopy = new Tile(Copyofthis);
-                PossibleofThis.Add(LoopCopy);
-                Copyofthis.Rotate();
-            }
-            foreach (Tile version in PossibleofThis)
-            {
-                if (version.CompareByPath(comparison)) {
+                if(comparison.CompareByPath(Copyofthis))
+                {
                     return false;
                 }
+                Copyofthis.Rotate();
             }
             return true;
         }
