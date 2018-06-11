@@ -30,13 +30,19 @@ namespace TsuroTheSecond
 
         public void PlaceTile(Tile tile, int x, int y)
         {
-            //Console.WriteLine(x + "::" + y);
-            if (x < 0 || x > 5 || y < 0 || y > 5) {
+            if (InBoard(x, y)) 
+            {
+                this.tiles[x][y] = tile;
+            }
+            else
+            {
                 throw new ArgumentException("Tile placement is out of board range");
             }
+        }
 
-
-            this.tiles[x][y] = tile;
+        public Boolean InBoard(int x, int y)
+        {
+            return !(x < 0 || x > 5 || y < 0 || y > 5);
         }
 
         public Boolean FreeTokenSpot(Position position) {
@@ -83,27 +89,25 @@ namespace TsuroTheSecond
         public Boolean ValidTilePlacement(string color, Tile tile)
         {
             // checks if placing a tile on the board will kill the player 
+            // remember old positions
             Boolean playerAlive = true;
             var origNext = this.ReturnNextSpot(color);
-            //Console.WriteLine("Next spot for the player is x: " + origNext.Item1 + " y: " + origNext.Item2);
             Position origPosition = new Position(this.ReturnPlayerSpot(color));
-            try{
+            if(InBoard(origNext.Item1, origNext.Item2))
+            {
                 this.PlaceTile(tile, origNext.Item1, origNext.Item2);
-            } catch(ArgumentException){
-                return false;
             }
-            //Console.WriteLine("Placed Tile");
+            else
+            {
+                throw new Exception("Cannot place tile at this position");
+            }
+
             this.MovePlayer(color);
-            //Console.WriteLine("Moved player");
 
-
-            //playerAlive = !player.IsDead();
             playerAlive = !this.IsDead(color);
 
             // undoing changes to the board
             this.PlaceTile(null, origNext.Item1, origNext.Item2);
-            //Console.WriteLine("Undid changes!");
-
             this.tokenPositions[color].x = origPosition.x;
             this.tokenPositions[color].y = origPosition.y;
             this.tokenPositions[color].port = origPosition.port;
@@ -141,6 +145,22 @@ namespace TsuroTheSecond
                 //Console.WriteLine("returning illegal! :: " + illegal.Count);
                 return illegal;
             }
+        }
+
+        public int TilesOnBoard()
+        {
+            int tilecount = 0;
+            foreach (List<Tile> row in tiles)
+            {
+                foreach (Tile each in row)
+                {
+                    if (each != null)
+                    {
+                        tilecount++;
+                    }
+                }
+            }
+            return tilecount;
         }
 
         public void MovePlayer(string color)

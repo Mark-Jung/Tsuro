@@ -231,7 +231,6 @@ namespace TsuroTheSecond
                     tileCount++;
                 }
             }
-            //Console.WriteLine("Checked if the tiles in hand are different from the ones on board!");
 
             int total = currentPlayer.Hand.Count + tileCount;
             if (all_tiles.Count != total)
@@ -243,7 +242,6 @@ namespace TsuroTheSecond
             // places tile
             var next = board.ReturnNextSpot(currentPlayer.Color);
             board.PlaceTile(tile, next.Item1, next.Item2);
-            //Console.WriteLine("Moved players");
 
             // consequence of moving
             List<Player> fatalities = new List<Player>();
@@ -256,14 +254,11 @@ namespace TsuroTheSecond
                 }
             }
 
-            //Console.WriteLine("Killing players and redistributing cards!");
-
             foreach (Player p in fatalities)
             {
                 KillPlayer(p);
             }
 
-            //Console.WriteLine("Moving " + currentPlayer.Color + " to the end of alive!");
             // put currentPlayer to end of _alive
             for (int i = 0; i < alive.Count; i++)
             {
@@ -290,15 +285,8 @@ namespace TsuroTheSecond
             }
 
             // check if 35 tiles have been placed.
-            int tilecount = 0;
-            foreach(List<Tile> row in board.tiles){
-                foreach(Tile each in row){
-                    if(each != null){
-                        tilecount++;
-                    }
-                }
-            }
-
+            int tilecount = board.TilesOnBoard();
+           
             Boolean GameDone = false;
             List<Player> Victors = new List<Player>();
 
