@@ -640,7 +640,7 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestReplacePlayer()
         {
-            MPlayer1 mPlayer1 = new MPlayer1("john");
+            MostSymmetricPlayer mPlayer1 = new MostSymmetricPlayer("john");
             LeastSymmetricPlayer replacement = new LeastSymmetricPlayer("adam");
 
             Player player = new Player(mPlayer1, "blue");

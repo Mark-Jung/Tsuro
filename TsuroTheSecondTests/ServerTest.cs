@@ -101,7 +101,7 @@ namespace TsuroTheSecondTests
         {
             AddThreePlayers();
 
-            MPlayer1 mPlayer = new MPlayer1("harry");
+            MostSymmetricPlayer mPlayer = new MostSymmetricPlayer("harry");
             server.AddPlayer(mPlayer, "blue");
         }
 
@@ -111,7 +111,7 @@ namespace TsuroTheSecondTests
         {
             AddThreePlayers();
 
-            MPlayer1 mPlayer = new MPlayer1("john");
+            MostSymmetricPlayer mPlayer = new MostSymmetricPlayer("john");
             server.AddPlayer(mPlayer, "not blue");
         }
 
@@ -221,7 +221,7 @@ namespace TsuroTheSecondTests
         public void TestLegalPlayCheckLastPossibleMoveNotUndone()
         {
             Server server = new Server();
-            MPlayer1 p1 = new MPlayer1("john");
+            MostSymmetricPlayer p1 = new MostSymmetricPlayer("john");
             server.AddPlayer(p1, "blue");
 
             Tile testTile1 = new Tile(1, new List<int>(8) {
@@ -250,7 +250,7 @@ namespace TsuroTheSecondTests
         public void TestIllegalPlayNullTile()
         {
             Server server = new Server();
-            MPlayer1 mp1 = new MPlayer1("jim");
+            MostSymmetricPlayer mp1 = new MostSymmetricPlayer("jim");
             server.AddPlayer(mp1, "blue");
 
             Tile testTile1 = new Tile(1, new List<int>(8) {
@@ -275,7 +275,7 @@ namespace TsuroTheSecondTests
         public void TestIllegalPlayTileNotInHand()
         {
             Server server = new Server();
-            MPlayer1 mp1 = new MPlayer1("jim");
+            MostSymmetricPlayer mp1 = new MostSymmetricPlayer("jim");
             server.AddPlayer(mp1, "blue");
 
             Tile testTile1 = new Tile(1, new List<int>(8) {
@@ -304,7 +304,7 @@ namespace TsuroTheSecondTests
         public void TestLegalPlayBoardUndo()
         {
             Server server = new Server();
-            MPlayer1 p1 = new MPlayer1("john");
+            MostSymmetricPlayer p1 = new MostSymmetricPlayer("john");
             server.AddPlayer(p1, "blue");
 
             Tile testTile1 = new Tile(1, new List<int>(8) {
