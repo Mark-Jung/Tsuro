@@ -160,14 +160,14 @@ namespace TsuroTheSecond
         {
             if(args.Length == 0){
                 Tournament tournament_player = new Tournament();
-                string name = "Mark";
+                string name = "packing is boring";
                 string color = "blue";
                 tournament_player.toPlay = 0;
                 tournament_player.port = 12345;
 
                 IPAddress ip;
                 IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
+                IPAddress ipAddress = IPAddress.Parse("10.105.152.215");
                 ip = ipAddress;
 
                 Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
